@@ -1,0 +1,272 @@
+{
+ "https://www.marchandaromes.com.ar/productos/maison-parfum-bergamota-orquidea/": {
+  "name": "Maison Parfum | Bergamota & Orquídea",
+  "img": "https://acdn-us.mitiendanube.com/stores/001/356/042/products/home-spray-bo-9b2c93b8d90d2d959917806727011051-480-0.webp",
+  "price": 30000
+ },
+ "https://www.marchandaromes.com.ar/productos/arome-diffuseur-bergamota-orquidea/": {
+  "name": "Arome Diffuseur | Bergamota & Orquídea",
+  "img": "https://acdn-us.mitiendanube.com/stores/001/356/042/products/nueva-web-11-355d6111341445e10017634009792031-480-0.webp",
+  "price": 37000
+ },
+ "https://www.marchandaromes.com.ar/productos/jabon-liquido-verbena-limon/": {
+  "name": "Jabón Líquido | Verbena & Limón",
+  "img": null,
+  "price": 14000
+ },
+ "https://www.marchandaromes.com.ar/productos/crema-de-manos-verbena-limon/": {
+  "name": "Crema de Manos | Verbena & Limón",
+  "img": null,
+  "price": 11000
+ },
+ "https://www.marchandaromes.com.ar/productos/maison-parfum-verbena-limon/": {
+  "name": "Maison Parfum | Verbena & Limón",
+  "img": null,
+  "price": 30000
+ },
+ "https://www.marchandaromes.com.ar/productos/arome-diffuseur-verbena-limon/": {
+  "name": "Arome Diffuseur | Verbena & Limón",
+  "img": null,
+  "price": 37000
+ },
+ "https://www.marchandaromes.com.ar/productos/varillas-de-ratan-negras-refill-de-varillas-para-difusor/": {
+  "name": "Varillas de Ratan Negras | Refill de varillas para Difusor",
+  "img": null,
+  "price": 7500
+ },
+ "https://www.marchandaromes.com.ar/productos/crema-de-manos-bergamota-orquidea/": {
+  "name": "Crema de Manos | Bergamota & Orquídea",
+  "img": null,
+  "price": 11000
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-jabon-liquido-bergamota-orquidea/": {
+  "name": "Refill Jabón Líquido | Bergamota & Orquídea",
+  "img": null,
+  "price": 36000
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-arome-diffuseur-verbena-limon/": {
+  "name": "Refill Arome Diffuseur | Verbena & Limón",
+  "img": null,
+  "price": 42000
+ },
+ "https://www.marchandaromes.com.ar/productos/crema-de-cuerpo-santal-violeta/": {
+  "name": "Crema de Cuerpo | Santal & Violeta",
+  "img": null,
+  "price": 16000
+ },
+ "https://www.marchandaromes.com.ar/productos/crema-de-manos-santal-violeta/": {
+  "name": "Crema de Manos | Santal & Violeta",
+  "img": null,
+  "price": 11000
+ },
+ "https://www.marchandaromes.com.ar/productos/discovery-set-edition-doree/": {
+  "name": "Discovery Set | Édition Dorée",
+  "img": "https://acdn-us.mitiendanube.com/stores/001/356/042/products/estuche-d-08bf14d55ebcf050da17606360716192-480-0.webp",
+  "price": 35000
+ },
+ "https://www.marchandaromes.com.ar/productos/la-collection-creme-pour-les-mains-x4/": {
+  "name": "La Collection Crème Pour Les Mains x4",
+  "img": "https://acdn-us.mitiendanube.com/stores/001/356/042/products/caja-cremas-4b33944efe2c056d2c17660693621667-480-0.webp",
+  "price": 33000
+ },
+ "https://www.marchandaromes.com.ar/productos/le-marais-absolu-de-parfum-25/": {
+  "name": "Le Marais - Absolu de Parfum - 25%",
+  "img": null,
+  "price": 87000
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-arome-diffuseur-frambuesa-cassis-1wh46/": {
+  "name": "Refill Arome Diffuseur | Frambuesa & Cassís",
+  "img": null,
+  "price": 42000
+ },
+ "https://www.marchandaromes.com.ar/productos/le-bon-rouge-absolu-de-parfum-30/": {
+  "name": "Le Bon Rouge - Absolu de Parfum - 30%",
+  "img": null,
+  "price": 87000
+ },
+ "https://www.marchandaromes.com.ar/productos/discovery-set-edition-noir/": {
+  "name": "Discovery Set | Édition Noir",
+  "img": null,
+  "price": 35000
+ },
+ "https://www.marchandaromes.com.ar/productos/vela-aromatica-verbena-limon/": {
+  "name": "Vela Aromática | Verbena & Limón",
+  "img": null,
+  "price": 38000
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-home-spray-verbena-limon-500ml-11xr3/": {
+  "name": "Refill Home Spray | Verbena & Limón",
+  "img": null,
+  "price": 26000
+ },
+ "https://www.marchandaromes.com.ar/productos/cognac-canela-la-collection-limitee/": {
+  "name": "Cognac & Canela - La Collection Limitee",
+  "img": null,
+  "price": 26900
+ },
+ "https://www.marchandaromes.com.ar/productos/place-dauphine-absolu-de-parfum-30/": {
+  "name": "Place Dauphine - Absolu de Parfum - 30%",
+  "img": null,
+  "price": 87000
+ },
+ "https://www.marchandaromes.com.ar/productos/vela-aromatica-santal-violeta/": {
+  "name": "Vela Aromática | Santal & Violeta",
+  "img": null,
+  "price": 38000
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-arome-diffuseur-jazmin-gardenia-1s3e6/": {
+  "name": "Refill Arome Diffuseur | Jazmín & Gardenia",
+  "img": null,
+  "price": 42000
+ },
+ "https://www.marchandaromes.com.ar/productos/arome-diffuseur-jazmin-gardenia-giwhn/": {
+  "name": "Arome Diffuseur | Jazmín & Gardenia",
+  "img": "https://acdn-us.mitiendanube.com/stores/001/356/042/products/difusor-jg-b4b469b2bc8207dec317806719442689-480-0.webp",
+  "price": 37000
+ },
+ "https://www.marchandaromes.com.ar/productos/crema-de-manos-bergamota-orquidea-50g-1mbkc/": {
+  "name": "Crema de Manos | Bergamota & Orquídea 50g",
+  "img": "https://acdn-us.mitiendanube.com/stores/001/356/042/products/crema-bo-735f87ba87d1f251d217748912879319-480-0.webp",
+  "price": 8500
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-home-spray-frambuesa-cassis-euqf2/": {
+  "name": "Refill Home Spray | Frambuesa & Cassís",
+  "img": null,
+  "price": 26000
+ },
+ "https://www.marchandaromes.com.ar/productos/arome-diffuseur-jazmin-gardenia-copia-fbu6i/": {
+  "name": "Arome Diffuseur | Oud & Maracuyá",
+  "img": null,
+  "price": 37000
+ },
+ "https://www.marchandaromes.com.ar/productos/crema-de-cuerpo-verbena-limon-1ejl0/": {
+  "name": "Crema de Manos | Verbena & Limón 50g",
+  "img": null,
+  "price": 8500
+ },
+ "https://www.marchandaromes.com.ar/productos/bismillah-absolu-de-parfum-25/": {
+  "name": "Bismillah - Absolu de Parfum - 25%",
+  "img": null,
+  "price": 87000
+ },
+ "https://www.marchandaromes.com.ar/productos/crema-de-manos-orquidea-jazmin-50g-11n9j/": {
+  "name": "Crema de Manos | Orquídea & Jazmín 50g",
+  "img": null,
+  "price": 8500
+ },
+ "https://www.marchandaromes.com.ar/productos/bois-brule-absolu-de-parfum-25/": {
+  "name": "Bois Brûlé - Absolu de Parfum - 25%",
+  "img": null,
+  "price": 87000
+ },
+ "https://www.marchandaromes.com.ar/productos/arome-diffuseur-frambuesa-cassis-nrf3o/": {
+  "name": "Arome Diffuseur | Frambuesa & Cassís",
+  "img": null,
+  "price": 37000
+ },
+ "https://www.marchandaromes.com.ar/productos/jabon-liquido-oud-maracuya-jyoh2/": {
+  "name": "Jabón Líquido | Oud & Maracuyá",
+  "img": null,
+  "price": 14000
+ },
+ "https://www.marchandaromes.com.ar/productos/campana-de-vidrio-para-velas/": {
+  "name": "Campana de Vidrio para Velas",
+  "img": null,
+  "price": 25000
+ },
+ "https://www.marchandaromes.com.ar/productos/brume-verte-absolu-de-parfum-25/": {
+  "name": "Brume Verte - Absolu de Parfum - 25%",
+  "img": null,
+  "price": 87000
+ },
+ "https://www.marchandaromes.com.ar/productos/crema-de-cuerpo-oud-maracuya-1gtsi/": {
+  "name": "Crema de cuerpo | Oud & Maracuyá",
+  "img": "https://acdn-us.mitiendanube.com/stores/001/356/042/products/crema-cuerpo-om-86896dc4d8308ccb4417851738125476-480-0.webp",
+  "price": 16000
+ },
+ "https://www.marchandaromes.com.ar/productos/vela-aromatica-frambuesa-casis-1kngr/": {
+  "name": "Vela Aromática | Frambuesa & Cassís",
+  "img": "https://acdn-us.mitiendanube.com/stores/001/356/042/products/vela-fc-apagada-01cb022421db17045c17806708177692-480-0.webp",
+  "price": 38000
+ },
+ "https://www.marchandaromes.com.ar/productos/aceite-para-hornillo-1n4su/": {
+  "name": "Aceite para hornillo",
+  "img": null,
+  "price": 18000
+ },
+ "https://www.marchandaromes.com.ar/productos/crema-de-manos-santal-violeta-50g-1j8kg/": {
+  "name": "Crema de Manos | Santal & Violeta 50g",
+  "img": null,
+  "price": 8500
+ },
+ "https://www.marchandaromes.com.ar/productos/duo-especial-body-lotion-jabon-liquido-1uuht/": {
+  "name": "Duo Especial Body Lotion & Jabón Líquido",
+  "img": null,
+  "price": 30000
+ },
+ "https://www.marchandaromes.com.ar/productos/crema-de-manos-oud-maracuya-1ah64/": {
+  "name": "Crema de Manos | Oud & Maracuyá",
+  "img": null,
+  "price": 11000
+ },
+ "https://www.marchandaromes.com.ar/productos/vela-aromatica-jazmin-gardenia-copia-17s1k/": {
+  "name": "Vela Aromática | Oud & Maracuyá",
+  "img": null,
+  "price": 38000
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-jabon-liquido-oud-maracuya-1vekm/": {
+  "name": "Refill Jabón Líquido | Oud & Maracuyá",
+  "img": null,
+  "price": 36000
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-jabon-liquido-verbena-limon/": {
+  "name": "Refill Jabón Líquido | Verbena & Limón",
+  "img": null,
+  "price": 36000
+ },
+ "https://www.marchandaromes.com.ar/productos/jabon-liquido-santal-violeta/": {
+  "name": "Jabón Líquido | Santal & Violeta",
+  "img": null,
+  "price": 14000
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-jabon-liquido-santal-violeta/": {
+  "name": "Refill Jabón Líquido | Santal & Violeta",
+  "img": null,
+  "price": 36000
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-home-spray-jazmin-gardenia-9hev9/": {
+  "name": "Refill Home Spray | Jazmín & Gardenia",
+  "img": null,
+  "price": 26000
+ },
+ "https://www.marchandaromes.com.ar/productos/set-refill-vidrio-verbena-limon/": {
+  "name": "Set Refill Jabón Líquido Vidrio",
+  "img": "https://acdn-us.mitiendanube.com/stores/001/356/042/products/botellon-05-a2241b308b012a930617827362475024-480-0.webp",
+  "price": 60000
+ },
+ "https://www.marchandaromes.com.ar/productos/maison-parfum-jazmin-gardenia-mzcb3/": {
+  "name": "Maison Parfum | Jazmín & Gardenia",
+  "img": "https://acdn-us.mitiendanube.com/stores/001/356/042/products/home-spray-jg-3a28329675c7dc62ee17806724554061-480-0.webp",
+  "price": 30000
+ },
+ "https://www.marchandaromes.com.ar/productos/maison-parfum-frambuesa-cassis-18k1x/": {
+  "name": "Maison Parfum | Frambuesa & Cassís",
+  "img": null,
+  "price": 30000
+ },
+ "https://www.marchandaromes.com.ar/productos/maison-parfum-jazmin-gardenia-copia-1kruc/": {
+  "name": "Maison Parfum | Oud & Maracuyá",
+  "img": null,
+  "price": 30000
+ },
+ "https://www.marchandaromes.com.ar/productos/refill-difusor-deco-xl-1v2yg/": {
+  "name": "Refill Difusor Deco XL",
+  "img": null,
+  "price": 43000
+ },
+ "https://www.marchandaromes.com.ar/productos/tijera-corta-pabilo/": {
+  "name": "Tijera Corta Pabilo",
+  "img": null,
+  "price": 17000
+ }
+}
