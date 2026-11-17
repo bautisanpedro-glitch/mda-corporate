@@ -57,13 +57,17 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
 .adbar__track span::after{content:"·";margin:0 30px;color:var(--gold);}
 @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-.site-head{position:sticky;top:0;z-index:60;background:var(--bg);border-bottom:1px solid var(--line-soft);transition:box-shadow .45s var(--ease);}
-.site-head.is-stuck{box-shadow:0 12px 30px -18px rgba(0,0,0,.35);}
+.site-head{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  background:transparent;border-bottom:1px solid transparent;
+  transition:background .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease);
+}
+.site-head.is-solid{background:var(--bg);border-bottom-color:var(--line-soft);box-shadow:0 12px 30px -20px rgba(0,0,0,.3);}
 .site-head__in{max-width:var(--maxw);margin:0 auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;transition:padding .45s var(--ease);}
-.site-head.is-stuck .site-head__in{padding-top:10px;padding-bottom:10px;}
+.site-head.is-solid .site-head__in{padding-top:10px;padding-bottom:10px;}
 .logo{display:inline-flex;align-items:center;min-height:44px;}
 .logo img{height:38px;width:auto;transition:height .45s var(--ease);}
-.site-head.is-stuck .logo img{height:31px;}
+.site-head.is-solid .logo img{height:31px;}
 .nav{display:flex;gap:28px;}
 .nav a{text-decoration:none;font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding-bottom:3px;border-bottom:1px solid transparent;transition:border-color .3s var(--ease);}
 .nav a:hover{border-bottom-color:var(--ink);}
@@ -85,77 +89,44 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
 .btn svg{width:16px;height:16px;flex:none;}
 
 /* ============================================================
-   HERO — LA CAJA QUE SE ABRE CON EL SCROLL
+   HERO — LA CAJA A PANTALLA COMPLETA, ABIERTA POR EL SCROLL
    ============================================================ */
-.stage{position:relative;height:300vh;}
+.stage{position:relative;height:250vh;}
 .stage__sticky{
-  position:sticky;top:0;height:var(--vh,100vh);overflow:hidden;
-  display:grid;align-items:center;
+  position:sticky;top:0;height:var(--vh,100vh);width:100%;
+  overflow:hidden;background:#e9e3da;
 }
-.stage__grid{
-  width:100%;max-width:var(--maxw);margin:0 auto;padding:0 28px;
-  display:grid;gap:0;grid-template-columns:1fr;justify-items:center;
-}
-@media(min-width:900px){
-  .stage__grid{grid-template-columns:1fr 0.86fr;align-items:center;gap:40px;justify-items:stretch;}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block;}
+
+/* Velo: aclara arriba para el titulo y oscurece abajo para el boton.
+   El centro de la foto queda limpio. */
+.veil{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(240,238,235,.88) 0%,rgba(240,238,235,.42) 11%,rgba(240,238,235,0) 30%),
+    linear-gradient(0deg,rgba(26,22,18,.60) 0%,rgba(26,22,18,.18) 14%,rgba(26,22,18,0) 32%);
 }
 
-/* la caja */
-/* 0.563 = 480/852: convierte alto disponible en ancho manteniendo la proporcion */
-.box{
-  position:relative;justify-self:center;
-  width:min(100%, 300px, calc((var(--vh,100vh) - 405px) * 0.563));
+.over{
+  position:absolute;inset:0;z-index:2;
+  display:flex;flex-direction:column;justify-content:space-between;align-items:center;
+  text-align:center;pointer-events:none;
+  padding:calc(68px + env(safe-area-inset-top,0px)) 22px calc(28px + env(safe-area-inset-bottom,0px));
 }
-@media(min-width:900px){
-  .box{order:2;width:min(100%, 420px, calc((var(--vh,100vh) - 120px) * 0.563));}
-}
-.box canvas,.box img{width:100%;height:auto;aspect-ratio:480/852;display:block;}
-.box .box__fallback{display:none;}
-.box.no-canvas canvas{display:none;}
-.box.no-canvas .box__fallback{display:block;}
-/* sombra suave para despegar la caja del fondo */
-.box::after{
-  content:"";position:absolute;left:8%;right:8%;bottom:-2%;height:9%;
-  background:radial-gradient(ellipse at center,rgba(0,0,0,.16),rgba(0,0,0,0) 70%);
-  filter:blur(6px);pointer-events:none;
-}
-
-/* el texto que acompaña */
-.beats{position:relative;min-height:230px;display:grid;align-content:center;}
-@media(min-width:900px){.beats{order:1;min-height:340px;}}
-.beat{
-  grid-area:1/1;opacity:0;transform:translateY(16px);
-  transition:opacity .5s var(--ease),transform .5s var(--ease);
-  pointer-events:none;text-align:center;
-}
-@media(min-width:900px){.beat{text-align:left;}}
-.beat.is-on{opacity:1;transform:none;pointer-events:auto;}
-.beat h1{margin:16px 0 0;}
+.over > *{pointer-events:auto;width:100%;}
+.beat{will-change:opacity,transform;}
+.beat h1{margin:10px 0 0;font-size:clamp(2.4rem,11vw,4.4rem);}
 .beat h1 em{font-style:italic;font-weight:300;display:block;}
-.beat p{font-size:13px;line-height:2;color:var(--ink-soft);margin:18px auto 0;max-width:42ch;}
-@media(min-width:900px){.beat p{margin-left:0;}}
-.beat .btn{margin-top:26px;}
+.beat--fin .btn{width:100%;max-width:330px;padding:21px 28px;font-size:11px;}
 
-/* indicador de scroll */
-.hint{
-  position:absolute;left:50%;transform:translateX(-50%);
-  bottom:calc(18px + env(safe-area-inset-bottom,0px));
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  font-size:8.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-mute);
-  transition:opacity .5s var(--ease);
-}
-.hint__rail{width:1px;height:34px;background:var(--line);position:relative;overflow:hidden;}
-.hint__rail i{position:absolute;inset:0;background:var(--ink);transform:scaleY(var(--p,0));transform-origin:top;}
-.hint.is-off{opacity:0;}
-
-/* cartel de carga de la secuencia */
+/* Carga de la secuencia */
 .boot{
-  position:absolute;inset:0;display:grid;place-items:center;background:var(--bg);
-  z-index:5;transition:opacity .6s var(--ease);
+  position:absolute;inset:0;z-index:3;display:grid;place-items:center;
+  background:var(--bg);transition:opacity .55s var(--ease);
 }
 .boot.is-off{opacity:0;pointer-events:none;}
-.boot__bar{width:140px;height:1px;background:var(--line);overflow:hidden;}
-.boot__bar i{display:block;height:100%;background:var(--ink);width:0;transition:width .3s linear;}
+.boot__bar{width:120px;height:1px;background:var(--line);overflow:hidden;}
+.boot__bar i{display:block;height:100%;background:var(--ink);width:0;transition:width .25s linear;}
 
 /* ============================================================
    SECCIONES
@@ -310,14 +281,7 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
   .site-head__in{padding:12px 20px;}
   .logo img{height:31px;}
   .site-head .btn{padding:12px 15px;font-size:9px;letter-spacing:.15em;white-space:nowrap;min-height:44px;}
-  .stage{height:260vh;}
-  .stage__grid{padding:0 20px;gap:2px;}
-  .beats{min-height:0;}
-  .beat h1{font-size:clamp(2.05rem,7.6vw,2.8rem);}
-  .beat p{font-size:12px;line-height:1.85;margin-top:12px;}
-  .beat .btn{margin-top:18px;padding:16px 26px;}
-  .hint{bottom:calc(10px + env(safe-area-inset-bottom,0px));}
-  .hint__rail{height:26px;}
+  .stage{height:230vh;}
   .sec{padding:64px 0;}
   .ask{gap:34px;}
   .opt{min-height:0;padding:17px 16px;}
@@ -332,24 +296,15 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
   html.js .reveal>*,html.js .reveal-self{opacity:1 !important;transform:none !important;}
-  .stage{height:auto !important;}
-  .stage__sticky{position:static;height:auto;padding:70px 0;}
-  .beat{position:static;opacity:1 !important;transform:none !important;grid-area:auto;}
-  .beat:not(:first-child){display:none;}
-  .hint{display:none;}
+  /* Sin animacion: una sola pantalla, la caja ya abierta y el boton a la vista. */
+  .stage{height:var(--vh,100vh) !important;}
+  .beat{opacity:1 !important;transform:none !important;}
 }
 </style>
 </head>
 <body>
 
-<div class="adbar" aria-hidden="true">
-  <div class="adbar__track">
-    <span>Presupuestos corporativos en 24 hs</span><span>Personalización de packaging</span><span>Envíos a todo el país</span>
-    <span>Presupuestos corporativos en 24 hs</span><span>Personalización de packaging</span><span>Envíos a todo el país</span>
-  </div>
-</div>
-
-<header class="site-head">
+<header class="site-head" id="head">
   <div class="site-head__in">
     <a class="logo" href="https://www.marchandaromes.com.ar/" aria-label="Marchand D'Arômes">
       <img src="https://acdn-us.mitiendanube.com/stores/001/356/042/themes/common/logo-103661872-1601914931-a91680a14a68222c357ec1d8da769dc41601914931.png" alt="Marchand D'Arômes">
@@ -363,48 +318,31 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
   </div>
 </header>
 
-<!-- ══════════ HERO: LA CAJA SE ABRE AL SCROLLEAR ══════════ -->
 <section class="stage" id="stage">
   <div class="stage__sticky">
+    <canvas id="cv" aria-label="Caja de regalo Marchand D'Arômes abriéndose"></canvas>
+    <div class="veil" aria-hidden="true"></div>
 
-    <div class="boot" id="boot">
-      <div style="text-align:center">
-        <p class="eyebrow" style="margin:0 0 14px">Marchand D'Arômes</p>
-        <div class="boot__bar"><i id="bootBar"></i></div>
+    <div class="over">
+      <div class="beat beat--ini" id="beatIni">
+        <p class="eyebrow">Regalos corporativos</p>
+        <h1>Algo que se abre<em>y se recuerda</em></h1>
+      </div>
+      <div class="beat beat--fin" id="beatFin" style="opacity:0">
+        <a class="btn btn--gold" href="#elegir">Armá el tuyo</a>
       </div>
     </div>
 
-    <div class="stage__grid">
-      <div class="beats">
-        <div class="beat is-on" data-beat="0">
-          <p class="eyebrow">Regalos corporativos</p>
-          <h1>Algo<br>que se abre<em>y se recuerda</em></h1>
-        </div>
-        <div class="beat" data-beat="1">
-          <p class="eyebrow">El momento</p>
-          <h1>No es la caja<em>es abrirla</em></h1>
-          <p>Perfumería, cosmética y aromas para el hogar, en un packaging que vale la pena desenvolver despacio.</p>
-        </div>
-        <div class="beat" data-beat="2">
-          <p class="eyebrow">Tu turno</p>
-          <h1>Armá el tuyo<em>en dos pasos</em></h1>
-          <p>Elegí cuánto querés invertir y cuántos necesitás. Te mostramos tres combos y lo pedís por WhatsApp.</p>
-          <a class="btn btn--gold" href="#elegir">Elegir mi combo</a>
-        </div>
-      </div>
-
-      <div class="box" id="box">
-        <canvas id="cv" width="480" height="852" aria-label="Caja de regalo Marchand D'Arômes abriéndose"></canvas>
-        <img class="box__fallback" src="box/b47.webp" alt="Caja de regalo Marchand D'Arômes abierta" width="480" height="852">
-      </div>
-    </div>
-
-    <div class="hint" id="hint" aria-hidden="true">
-      <span>Scrolleá</span>
-      <span class="hint__rail"><i id="hintBar"></i></span>
-    </div>
+    <div class="boot" id="boot"><div class="boot__bar"><i id="bootBar"></i></div></div>
   </div>
 </section>
+
+<div class="adbar" aria-hidden="true">
+  <div class="adbar__track">
+    <span>Presupuestos corporativos en 24 hs</span><span>Personalización de packaging</span><span>Envíos a todo el país</span>
+    <span>Presupuestos corporativos en 24 hs</span><span>Personalización de packaging</span><span>Envíos a todo el país</span>
+  </div>
+</div>
 
 <!-- ══════════ LAS DOS PREGUNTAS ══════════ -->
 <section class="sec sec--alt" id="elegir">
@@ -539,104 +477,174 @@ const $$ = (s,c=document)=>[...c.querySelectorAll(s)];
 /* ============================================================================
    1. LA CAJA — animación dirigida por scroll
    ========================================================================== */
-const FRAMES = 48;
+const FRAMES = 64;
 const RUTA = i => "box/b" + String(i).padStart(2,"0") + ".webp";
 
 (function caja(){
-  const stage = $("#stage"), cv = $("#cv"), box = $("#box");
-  const boot = $("#boot"), bootBar = $("#bootBar"), hint = $("#hint"), hintBar = $("#hintBar");
-  const beats = $$(".beat");
+  const stage = $("#stage"), cv = $("#cv"), head = $("#head");
+  const boot = $("#boot"), bootBar = $("#bootBar");
+  const beatIni = $("#beatIni"), beatFin = $("#beatFin");
   const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if(!cv || !cv.getContext){ box.classList.add("no-canvas"); boot.classList.add("is-off"); return; }
+  if(!cv || !cv.getContext) { boot.classList.add("is-off"); return; }
   const ctx = cv.getContext("2d", { alpha:false });
 
-  const imgs = new Array(FRAMES);
-  let listas = 0, ultimo = -1, pedido = false;
+  const cuadros = new Array(FRAMES);     // ImageBitmap (o Image como respaldo)
+  let listas = 0;
 
-  /* Dibuja el frame i, o el más cercano ya cargado (evita huecos en blanco). */
-  function pintar(i){
-    let im = imgs[i];
-    if(!im || !im.complete || !im.naturalWidth){
-      for(let d=1; d<FRAMES; d++){
-        const a = imgs[i-d], b = imgs[i+d];
-        if(a && a.complete && a.naturalWidth){ im = a; break; }
-        if(b && b.complete && b.naturalWidth){ im = b; break; }
-      }
-    }
-    if(!im) return;
-    ctx.drawImage(im, 0, 0, cv.width, cv.height);
-    ultimo = i;
+  /* ---------- tamanio real del canvas ---------- */
+  let cw = 0, chh = 0;
+  function medir(){
+    const dpr = Math.min(devicePixelRatio || 1, 2);   // mas de 2x no se nota y cuesta
+    const w = Math.round(innerWidth * dpr);
+    const h = Math.round(innerHeight * dpr);
+    /* En mobile la barra de direcciones cambia innerHeight todo el tiempo:
+       solo redimensionamos si el cambio es grande, si no el canvas parpadea. */
+    if(w === cw && Math.abs(h - chh) < 120) return false;
+    cv.width = cw = w; cv.height = chh = h;
+    return true;
   }
 
-  /* Progreso 0→1 dentro del tramo con scroll disponible. */
+  /* ---------- dibujo tipo object-fit:cover ---------- */
+  function cubrir(im, alpha){
+    const s = Math.max(cv.width / im.width, cv.height / im.height);
+    const w = im.width * s, h = im.height * s;
+    if(alpha !== 1) ctx.globalAlpha = alpha;
+    ctx.drawImage(im, (cv.width - w) / 2, (cv.height - h) / 2, w, h);
+    if(alpha !== 1) ctx.globalAlpha = 1;
+  }
+
+  function cercano(i){
+    for(let d = 0; d < FRAMES; d++){
+      if(cuadros[i - d]) return cuadros[i - d];
+      if(cuadros[i + d]) return cuadros[i + d];
+    }
+    return null;
+  }
+
+  /* pos viene con decimales: mezclamos los dos frames vecinos y el salto
+     entre imagenes deja de notarse. */
+  function pintar(pos){
+    const a = Math.max(0, Math.min(FRAMES - 1, Math.floor(pos)));
+    const t = pos - a;
+    const ia = cuadros[a] || cercano(a);
+    if(!ia) return;
+    cubrir(ia, 1);
+    if(t > 0.02 && a + 1 < FRAMES && cuadros[a + 1]) cubrir(cuadros[a + 1], t);
+  }
+
   function progreso(){
     const r = stage.getBoundingClientRect();
-    const recorrido = stage.offsetHeight - innerHeight;
-    if(recorrido <= 0) return 0;
-    return Math.min(1, Math.max(0, -r.top / recorrido));
+    const rec = stage.offsetHeight - innerHeight;
+    if(rec <= 0) return 0;
+    return Math.min(1, Math.max(0, -r.top / rec));
   }
 
-  /* Opacidad de cada bloque de texto según el tramo que le toca. */
-  function texto(p){
-    const n = beats.length;
-    let activo = Math.min(n-1, Math.floor(p * n * 0.999));
-    beats.forEach((b,i)=> b.classList.toggle("is-on", i === activo));
-    hint.classList.toggle("is-off", p > 0.9);
-    hintBar.style.setProperty("--p", p.toFixed(3));
+  const rampa = (p, a, b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+
+  /* ---------- lazo ---------- */
+  let actual = 0, corriendo = true, forzar = true, lazoVivo = false;
+  function lazo(){
+    lazoVivo = true;
+    if(corriendo) requestAnimationFrame(lazo);
+    render();
   }
 
-  function cuadro(){
-    pedido = false;
-    const p = progreso();
-    const i = Math.min(FRAMES-1, Math.round(p * (FRAMES-1)));
-    if(i !== ultimo) pintar(i);
-    texto(p);
-  }
-  function alScrollear(){
-    if(pedido) return;
-    pedido = true;
-    requestAnimationFrame(cuadro);
+  function render(){
+    const objetivo = progreso();
+    /* Amortiguacion: el scroll de los celulares llega a tirones y esto lo
+       convierte en un movimiento continuo. */
+    actual += (objetivo - actual) * 0.2;
+    if(Math.abs(objetivo - actual) < 0.0005) actual = objetivo;
+
+    medir();
+    pintar(actual * (FRAMES - 1));
+    forzar = false;
+
+    const o1 = 1 - rampa(actual, .12, .30);
+    const o2 = rampa(actual, .64, .82);
+    beatIni.style.opacity = o1;
+    beatIni.style.transform = "translate3d(0," + ((1 - o1) * -14).toFixed(1) + "px,0)";
+    beatFin.style.opacity = o2;
+    beatFin.style.transform = "translate3d(0," + ((1 - o2) * 18).toFixed(1) + "px,0)";
+    head.classList.toggle("is-solid", actual > .97);
   }
 
-  /* --- precarga: primero el frame 0 para no mostrar nada vacío --- */
-  function cargar(i){
-    return new Promise(res=>{
-      const im = new Image();
-      im.decoding = "async";
-      im.onload = im.onerror = ()=>{ listas++; bootBar.style.width = Math.round(listas/FRAMES*100) + "%"; res(); };
-      im.src = RUTA(i);
-      imgs[i] = im;
+  /* ---------- carga ---------- */
+  function viaImg(src){
+    return new Promise((ok, no) => {
+      const im = new Image(); im.onload = () => ok(im); im.onerror = no; im.src = src;
     });
+  }
+  async function cargar(i){
+    if(cuadros[i]) return;
+    try{
+      const r = await fetch(RUTA(i));
+      const b = await r.blob();
+      /* ImageBitmap se dibuja ya decodificado: es lo que evita los tirones. */
+      cuadros[i] = ("createImageBitmap" in window) ? await createImageBitmap(b)
+                                                   : await viaImg(URL.createObjectURL(b));
+    }catch(e){
+      try{ cuadros[i] = await viaImg(RUTA(i)); }catch(_){}
+    }
+    listas++;
+    bootBar.style.width = Math.round(listas / FRAMES * 100) + "%";
+  }
+
+  /* Orden por subdivision: primero extremos y medios, para que desde temprano
+     haya una version aproximada de toda la animacion. */
+  function orden(n){
+    const out = [], visto = new Set();
+    const push = k => { if(k >= 0 && k < n && !visto.has(k)){ visto.add(k); out.push(k); } };
+    push(0); push(n - 1);
+    for(let paso = n >> 1; paso >= 1; paso >>= 1)
+      for(let i = paso; i < n; i += paso) push(i);
+    for(let i = 0; i < n; i++) push(i);
+    return out;
   }
 
   (async function arrancar(){
     await cargar(0);
-    pintar(0);
+    medir(); pintar(0);
     boot.classList.add("is-off");
 
-    /* El resto entra de a tandas, sin bloquear nada. */
-    const orden = [];
-    for(let i=1;i<FRAMES;i++) orden.push(i);
-    const TANDA = 6;
-    for(let i=0;i<orden.length;i+=TANDA){
-      await Promise.all(orden.slice(i,i+TANDA).map(cargar));
-      cuadro();
+    if(quieto){
+      await cargar(FRAMES - 1);
+      medir(); pintar(FRAMES - 1);
+      beatIni.style.opacity = 1; beatFin.style.opacity = 1;
+      head.classList.add("is-solid");
+      return;                                  // sin lazo ni scroll scrubbing
+    }
+    requestAnimationFrame(lazo);
+    setTimeout(() => {
+      if(lazoVivo) return;
+      beatIni.style.opacity = 1;
+      beatFin.style.opacity = 1;
+      beatFin.style.transform = "none";
+    }, 1500);
+
+    const lista = orden(FRAMES).filter(i => i !== 0);
+    const A_LA_VEZ = 6;
+    for(let i = 0; i < lista.length; i += A_LA_VEZ){
+      await Promise.all(lista.slice(i, i + A_LA_VEZ).map(cargar));
+      forzar = true;
     }
   })();
 
-  if(quieto){ cargar(FRAMES-1).then(()=>pintar(FRAMES-1)); hint.style.display="none"; return; }
+  /* Pausa el lazo cuando el hero no esta en pantalla: no gastar bateria. */
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(es => {
+      const visible = es[0].isIntersecting;
+      if(visible && !corriendo){ corriendo = true; forzar = true; requestAnimationFrame(lazo); }
+      else if(!visible) corriendo = false;
+    }, { threshold:0 }).observe(stage);
+  }
 
-  addEventListener("scroll", alScrollear, { passive:true });
-  addEventListener("resize", alScrollear, { passive:true });
-  /* Si el navegador restaura la posicion de scroll despues de init, o se vuelve
-     desde el historial, hay que recalcular: si no, la caja queda en el frame 0. */
-  addEventListener("load", cuadro);
-  addEventListener("pageshow", cuadro);
-  cuadro();
+  addEventListener("pageshow", () => { forzar = true; });
 
-  /* Punto de entrada para pruebas automatizadas (no se usa en produccion). */
-  window.__hero = { cuadro, progreso, pintar, imgs };
+  /* Punto de entrada para pruebas (no se usa en produccion). */
+  window.__hero = { pintar, progreso, cuadros, medir, render,
+                    get vivo(){ return lazoVivo; },
+                    ir(p){ actual = p; forzar = true; pintar(p * (FRAMES - 1)); } };
 })();
 
 /* ============================================================================
@@ -863,7 +871,7 @@ $("#footWa").href = "https://wa.me/" + CONFIG.WHATSAPP;
   addEventListener("scroll", ()=>{
     if(pendiente) return;
     pendiente = true;
-    requestAnimationFrame(()=>{ head.classList.toggle("is-stuck", scrollY > 40); pendiente = false; });
+    requestAnimationFrame(()=>{ head.classList.toggle("is-solid", scrollY > 40); pendiente = false; });
   }, { passive:true });
 })();
 </script>

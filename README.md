@@ -34,7 +34,7 @@ Dominio propio en **Settings → Domains**, agregando el `CNAME` que indica Verc
 
     .
     ├── index.html        # la página entera: HTML + CSS + JS
-    ├── box/              # 48 frames WebP de la caja abriéndose (680 KB)
+    ├── box/              # 64 frames WebP de la caja abriéndose (1,2 MB)
     ├── vercel.json       # cleanUrls y headers de seguridad
     ├── .vercelignore     # qué va al repo pero no al deploy
     ├── .gitignore
@@ -46,7 +46,7 @@ Dominio propio en **Settings → Domains**, agregando el `CNAME` que indica Verc
         ├── encode-frames.py  # regenera la secuencia de frames
         └── README.md         # cómo rehacerla
 
-**Lo que se publica son 865 KB.** El video original y el catálogo de referencia
+**Lo que se publica son ~1,3 MB**, casi todo la secuencia del banner. El video original y el catálogo de referencia
 están en el repositorio pero excluidos del deploy por `.vercelignore`: sirven
 para mantener el proyecto, no para que los baje un visitante.
 
@@ -54,35 +54,77 @@ para mantener el proyecto, no para que los baje un visitante.
 
 ## El banner: la caja que se abre
 
+Ocupa la pantalla completa y se abre a medida que bajás. Es lo primero y lo
+único que se ve al entrar.
+
 ### De dónde salen los frames
 
 El video original (`.mov`, 2,6 s, 2160×3840, **HEVC**) no sirve para la web:
 Chrome y Firefox no decodifican HEVC de forma confiable. Por eso el banner **no
-usa video**, sino una secuencia de 48 imágenes WebP que se dibujan en un canvas.
+usa video**, sino 64 imágenes WebP (660×1172, 1,2 MB en total) dibujadas sobre
+un canvas.
 
 Los frames no están repartidos por tiempo sino **por movimiento acumulado**: se
-midió la diferencia entre frames consecutivos y se eligieron 48 a intervalos
-iguales de movimiento. Así el scroll avanza parejo y no se gastan frames en los
-tramos donde la caja está quieta.
+mide la diferencia entre frames consecutivos y se eligen 64 a intervalos iguales
+de movimiento. Así el scroll avanza parejo y no se gastan frames donde la caja
+está quieta.
 
 ### Cómo funciona
 
     progreso = -stage.top / (stage.alto - alto_viewport)   // 0 a 1
-    frame    = round(progreso × 47)
+    posicion = progreso × 63                               // con decimales
 
-La sección `.stage` mide 300vh (260vh en mobile) y adentro tiene un bloque
-`position:sticky` de un viewport de alto. Ese alto extra es el recorrido de
-scroll que alimenta la animación.
+La sección `.stage` mide 250vh (230vh en mobile) y adentro tiene un bloque
+`position:sticky` de un viewport de alto. Ese alto extra es el recorrido que
+alimenta la animación: unos 1050 px, es decir ~16 px de scroll por frame.
 
-El dibujado va por `requestAnimationFrame`, y si el frame exacto todavía no se
-descargó se pinta el más cercano que sí esté, para no dejar huecos en blanco.
-La carga es progresiva: primero el frame 0 (que es el LCP y está precargado con
-`<link rel=preload>`), después el resto de a tandas de 6.
+Tres cosas hacen que se sienta fluido y no a los saltos:
+
+1. **Mezcla entre frames vecinos.** `posicion` tiene decimales: se dibuja el
+   frame entero y encima el siguiente con `globalAlpha` igual a la parte
+   decimal. Con eso 64 imágenes se ven como un movimiento continuo.
+2. **Amortiguación.** El valor dibujado persigue al del scroll con un factor de
+   0,2 por cuadro. El scroll de los celulares llega a tirones; esto lo suaviza.
+3. **`ImageBitmap`.** Los frames se bajan con `fetch` y se convierten con
+   `createImageBitmap`, que entrega el mapa de bits ya decodificado. Dibujar un
+   `ImageBitmap` no bloquea el hilo principal; dibujar un `<img>` sí puede.
+
+El dibujado corre en un lazo de `requestAnimationFrame` que lee la posición del
+scroll en cada cuadro, en lugar de reaccionar al evento `scroll` (que en iOS
+llega con menos frecuencia durante el desplazamiento por inercia). El lazo se
+pausa cuando el hero sale de pantalla.
+
+### Carga
+
+El frame 0 está precargado con `<link rel=preload>` y es el LCP. El resto entra
+de a tandas de 6, **en orden de subdivisión**: primero los extremos, después los
+medios, después el relleno. Si alguien scrollea antes de que termine, se dibuja
+el frame más cercano que ya esté disponible, así que la animación nunca muestra
+un hueco: arranca tosca y se afina.
+
+### El texto
+
+Casi no hay. Un título mientras la caja está cerrada, **nada en todo el tramo en
+que se abre**, y el botón al final. Las opacidades se calculan con el progreso
+del scroll, no con clases.
+
+| progreso | título | botón |
+|---|---|---|
+| 0 → 0,12 | visible | — |
+| 0,12 → 0,30 | se va | — |
+| 0,30 → 0,64 | — | — |
+| 0,64 → 0,82 | — | aparece |
+| 0,82 → 1 | — | visible |
+
+> **Red de seguridad.** El botón arranca en `opacity:0` y lo muestra el lazo. Si
+> `requestAnimationFrame` no corriera (pestaña en segundo plano al cargar,
+> webview raro), a los 1,5 s se muestran título y botón igual. El punto de
+> conversión no puede quedar invisible.
 
 ### Para cambiar el video
 
 El original y el script que genera la secuencia están en `source/`. La receta
-completa, con los comandos, está en [source/README.md](source/README.md).
+completa está en [source/README.md](source/README.md).
 
 ---
 
