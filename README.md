@@ -1,190 +1,154 @@
 # Marchand D'Arômes — Regalos Corporativos
 
-Landing de regalos corporativos con configurador de kits y derivación a WhatsApp con el
-pedido ya armado. Sitio estático de un solo archivo, sin build y sin dependencias de runtime.
+Landing de regalos corporativos. El banner es una caja que se abre a medida que
+bajás con el scroll; después, dos preguntas y el pedido sale por WhatsApp.
+Sitio estático de un solo archivo, sin build y sin dependencias de runtime.
 
 ---
 
-## Configuracion
+## Configuración
 
-El numero de WhatsApp que recibe los pedidos se define al comienzo del bloque
-SCRIPT de index.html:
+El número de WhatsApp que recibe los pedidos se define al comienzo del bloque
+SCRIPT de `index.html`:
 
-    const CONFIG = {
-      WHATSAPP: "5491169835444",
-      MARCA: "Marchand D'Aromes"
-    };
+    const CONFIG = { WHATSAPP: "5491169835444", MARCA: "Marchand D'Arômes" };
 
-Formato internacional, sin el signo mas, sin espacios ni guiones. Los celulares
-argentinos llevan un 9 despues del 54:
-
-    +54 9 11 6983-5444  ->  5491169835444
-
-Si alguna vez cambia la linea comercial, se edita ahi y listo: no hay otro lugar
-del codigo donde el numero este escrito.
+Formato internacional, sin el signo más, sin espacios ni guiones. Los celulares
+argentinos llevan un 9 después del 54: `+54 9 11 6983-5444` → `5491169835444`.
 
 ---
 
 ## Deploy en Vercel
 
-El proyecto es estático: Vercel lo detecta solo, sin framework ni comando de build.
+El proyecto es estático: Vercel lo detecta solo.
 
-### Opción A — desde GitHub (recomendada)
+1. **Add New… → Project → Import Git Repository**.
+2. Framework Preset `Other`, Root Directory `./`, los tres campos de build vacíos.
+3. **Deploy**. Cada push a la rama principal vuelve a publicar.
 
-1. Crear el repositorio en GitHub y subir el contenido de esta carpeta
-   (`index.html`, `vercel.json`, `.gitignore`, `docs/`, `README.md`).
-2. En Vercel: **Add New… → Project → Import Git Repository**.
-3. Dejar la configuración por defecto:
-
-   | Campo | Valor |
-   |---|---|
-   | Framework Preset | `Other` |
-   | Root Directory | `./` |
-   | Build Command | *(vacío)* |
-   | Output Directory | *(vacío)* |
-   | Install Command | *(vacío)* |
-
-4. **Deploy**. Cada push a la rama principal vuelve a publicar automáticamente.
-
-### Opción B — drag & drop
-
-Comprimir la carpeta y arrastrarla a `vercel.com/new`. Sirve para una prueba rápida,
-pero pierde el redeploy automático.
-
-### Dominio
-
-En **Settings → Domains** se puede apuntar un subdominio propio, por ejemplo
-`corporativo.marchandaromes.com.ar`, agregando el registro `CNAME` que indica Vercel
-en el DNS del dominio.
+Dominio propio en **Settings → Domains**, agregando el `CNAME` que indica Vercel.
 
 ---
 
 ## Estructura
 
-```
-.
-├── index.html          # la página completa: HTML + CSS + JS en un solo archivo
-├── vercel.json         # cleanUrls y headers de seguridad
-├── .gitignore
-├── README.md
-└── docs/
-    └── catalogo.json   # referencia: 54 productos con nombre, precio e imagen
-```
+    .
+    ├── index.html        # la página entera: HTML + CSS + JS
+    ├── box/              # 48 frames WebP de la caja abriéndose (680 KB)
+    ├── vercel.json       # cleanUrls y headers de seguridad
+    ├── .vercelignore     # qué va al repo pero no al deploy
+    ├── .gitignore
+    ├── README.md
+    ├── docs/
+    │   └── catalogo.json # referencia: 54 productos con precio e imagen
+    └── source/           # material fuente, NO se publica
+        ├── caja.mov          # video original (9,4 MB, HEVC)
+        ├── encode-frames.py  # regenera la secuencia de frames
+        └── README.md         # cómo rehacerla
+
+**Lo que se publica son 865 KB.** El video original y el catálogo de referencia
+están en el repositorio pero excluidos del deploy por `.vercelignore`: sirven
+para mantener el proyecto, no para que los baje un visitante.
 
 ---
 
-## Mantenimiento
+## El banner: la caja que se abre
 
-Todo lo editable vive en el `<script>` de `index.html`, en tres objetos consecutivos.
+### De dónde salen los frames
 
-### 1. Precios — objeto `P`
+El video original (`.mov`, 2,6 s, 2160×3840, **HEVC**) no sirve para la web:
+Chrome y Firefox no decodifican HEVC de forma confiable. Por eso el banner **no
+usa video**, sino una secuencia de 48 imágenes WebP que se dibujan en un canvas.
 
-```js
-const P = {
-  manos50: { n:"Crème Pour Les Mains 50 g", p: 8500 },
-  ...
-};
-```
+Los frames no están repartidos por tiempo sino **por movimiento acumulado**: se
+midió la diferencia entre frames consecutivos y se eligieron 48 a intervalos
+iguales de movimiento. Así el scroll avanza parejo y no se gastan frames en los
+tramos donde la caja está quieta.
 
-Los precios **no se muestran en pantalla**: se usan solo para calcular la banda
-(`$` / `$$` / `$$$`) y para filtrar los kits según el presupuesto elegido.
-Al actualizar la lista de precios, el motor de recomendación se recalibra solo.
+### Cómo funciona
 
-### 2. Kits — array `KITS`
+    progreso = -stage.top / (stage.alto - alto_viewport)   // 0 a 1
+    frame    = round(progreso × 47)
 
-Cada kit declara su composición, su universo y las ocasiones para las que aplica:
+La sección `.stage` mide 300vh (260vh en mobile) y adentro tiene un bloque
+`position:sticky` de un viewport de alto. Ese alto extra es el recorrido de
+scroll que alimenta la animación.
 
-```js
-{ id:"rituel-maison", nom:"Rituel Maison", sub:"Difusor + vela",
-  items:["difusor","vela"],              // claves del objeto P
-  tags:["hogar","velas"],                // perfumeria | cosmetica | hogar | velas
-  occ:["vip","fin-ano","reconocimiento"],
-  img:"...webp", bg:"#000",
-  desc:"..." }
-```
+El dibujado va por `requestAnimationFrame`, y si el frame exacto todavía no se
+descargó se pinta el más cercano que sí esté, para no dejar huecos en blanco.
+La carga es progresiva: primero el frame 0 (que es el LCP y está precargado con
+`<link rel=preload>`), después el resto de a tandas de 6.
 
-Agregar un kit es sumar un objeto al array: no hay que tocar el motor.
+### Para cambiar el video
 
-### 3. Motor de recomendación — función `puntaje()`
-
-Pondera, en este orden de peso:
-
-1. **Ajuste al presupuesto** — tolerancia asimétrica: acepta hasta 30 % por debajo
-   del rango y 25 % por encima; más lejos que eso, descarta el kit.
-2. **Afinidad de universo** — coincidencia entre los `tags` del kit y lo elegido.
-3. **Ocasión** — si el kit está pensado para ese motivo.
-4. **Logística por volumen** — en pedidos de +100 unidades penaliza los kits de tres
-   piezas y premia los de pieza única, que escalan mejor en armado.
-
-Devuelve las 3 mejores opciones. Las 576 combinaciones posibles del formulario
-fueron verificadas: todas devuelven 3 resultados coherentes.
+El original y el script que genera la secuencia están en `source/`. La receta
+completa, con los comandos, está en [source/README.md](source/README.md).
 
 ---
 
-## Móvil y animaciones
+## Las dos preguntas
 
-La página está pensada para que el grueso del tráfico entre desde un celular.
+Son solo dos, sin formulario ni datos de contacto:
 
-### Decisiones de móvil
+1. **Cuánto invertir por regalo** — cuatro rangos.
+2. **Cuántos regalos** — cuatro tramos de cantidad.
 
-- Los campos del formulario usan **16 px** en pantallas chicas. Es el mínimo que evita
-  que iOS haga zoom automático al enfocar un input — un zoom que descoloca el layout y
-  en la práctica expulsa al usuario del formulario.
-- Teclados correctos por campo (`inputmode`, `enterkeyhint`, `autocapitalize`): el de
-  email muestra la arroba, el de teléfono abre el teclado numérico.
-- Todos los objetivos táctiles llegan a **44 px** de alto, incluidos el botón *Volver*
-  y los enlaces del pie, que antes medían 16 px.
-- La barra de WhatsApp respeta el notch (`env(safe-area-inset-bottom)`) y el `body`
-  suma padding inferior para que la barra no tape el footer.
-- Las fotos se piden al CDN en el ancho que corresponde (`srcset` de 240 a 640 px).
-  Un celular baja el hero en 640 px en lugar de 1024: unos **45 KB menos**.
-- `preconnect` al CDN de imágenes, además del de fuentes.
+Los combos salen de un mapa directo `presupuesto → 3 combos`, en la constante
+`COMBOS` del script. No hay motor de scoring: con dos preguntas no hacía falta,
+y un mapa explícito es más fácil de curar comercialmente.
 
-### Animaciones
+Para cambiar la oferta se edita `COMBOS`. Cada entrada define nombre, etiqueta,
+qué incluye, una línea de argumento y la foto:
 
-Son deliberadamente sobrias: la marca es perfumería francesa, no una landing de SaaS.
-Todo el movimiento usa `transform` y `opacity`, que el navegador resuelve en el
-compositor sin recalcular layout.
+    { nom:"Rituel Maison", band:"Más pedido",
+      items:["Arôme Diffuseur con varillas","Vela Aromática"],
+      why:"Aroma continuo más el ritual de encender.",
+      img:"difusor-....webp" }
 
-- Revelado progresivo de secciones al entrar en pantalla (`IntersectionObserver`).
-- Transición direccional entre pasos del configurador: avanza hacia la izquierda,
-  retrocede hacia la derecha.
-- Cascada escalonada en opciones, chips y tarjetas de resultado.
-- Header que se condensa al bajar, barra de progreso que se llena, y el `+` del FAQ
-  que gira 135° hasta volverse una cruz.
+El botón de WhatsApp aparece recién cuando hay un combo elegido, dice
+explícitamente qué se va a pedir ("Pedir Rituel Maison por WhatsApp") y en
+mobile queda fijo abajo. El mensaje se arma con combo, cantidad y rango.
 
-> **Dos redes de seguridad.** El revelado es decorativo, pero esconde contenido, así que
-> no puede fallar. Primero: el hero se revela al cargar, sin depender del observer.
-> Segundo: si a los 1,2 s el observer no reveló nada, se muestra todo de una. En el peor
-> caso el contenido aparece sin animación; nunca queda invisible.
+---
 
-Todo el movimiento se desactiva con `prefers-reduced-motion: reduce`.
+## Móvil
 
-> **Pendiente de verificar en un dispositivo real.** El panel de previsualización usado
-> durante el desarrollo no renderiza de forma continua, así que las transiciones no
-> avanzan entre capturas: se validó el estado final de cada pantalla, no el tiempo ni la
-> suavidad de las animaciones. Conviene recorrer la página en un teléfono una vez
-> publicada.
+- Todos los objetivos táctiles llegan a 44 px.
+- La barra fija de WhatsApp respeta el notch (`env(safe-area-inset-bottom)`) y
+  el body suma padding para no tapar el footer.
+- El alto del viewport se mide por JS (`--vh`) en lugar de usar `svh`/`dvh`:
+  varían entre navegadores y con la barra de direcciones, y acá la caja tiene
+  que entrar sí o sí junto al texto.
+- Las fotos de los combos se piden al CDN en el ancho que corresponde (`srcset`).
+
+Todo el movimiento se desactiva con `prefers-reduced-motion: reduce`; en ese
+caso la caja se muestra abierta y la sección deja de ser sticky.
+
+---
 
 ## Puntos abiertos
 
-- **Imágenes servidas desde el CDN de Tiendanube.** Las fotos se referencian
-  directamente desde `acdn-us.mitiendanube.com`. Funciona hoy y se mantiene en sincronía
-  con la tienda, pero si se migra de plataforma o se dan de baja productos, esas URLs
-  dejan de responder. Si se quiere independencia total, hay que descargar las 16 imágenes
-  a `/img` y reemplazar la constante `IMG` del script.
+- **Las fotos de producto se sirven desde el CDN de Tiendanube.** Se mantienen
+  en sincronía con la tienda, pero si se migra de plataforma o se dan de baja
+  productos, esas URLs dejan de responder. Los frames de la caja, en cambio,
+  viven en el repo. Decisión tomada a conciencia.
 
-- **Contenido comercial asumido, pendiente de validación.** Están escritos en el FAQ y en
-  la sección "Cómo trabajamos" y conviene confirmarlos antes de publicar:
-  mínimo de 10 unidades · personalización desde 25 · packaging co-branded desde 50 ·
-  plazos de 7 a 15 días hábiles · factura A y órdenes de compra · entrega multi-sede.
+- **Contenido comercial asumido, pendiente de validación:** plazos de 7 a 15
+  días hábiles, presupuesto en 24 hs, entrega multi-sede. Están en la sección
+  "Cómo sigue".
 
-- **Sin analítica.** No hay ningún script de medición. Si se quiere medir la conversión
-  del formulario, el punto natural es un evento en el click de *Enviar por WhatsApp*.
+- **Verificar en un teléfono real.** El panel de previsualización usado durante
+  el desarrollo no renderiza en continuo: no corren `requestAnimationFrame` ni
+  `IntersectionObserver`. Se validó el estado final de cada pantalla y la
+  aritmética del scroll forzando el dibujado a mano, pero no la fluidez de la
+  animación. Conviene recorrer la página en un celular una vez publicada.
+
+- **Sin analítica.** Si se quiere medir conversión, el punto natural es un
+  evento en el click del botón de WhatsApp.
 
 ---
 
-## Stack
+## Licencia de Vercel
 
-HTML, CSS y JavaScript sin dependencias. Tipografías **Fraunces** y **Roboto Mono**
-desde Google Fonts. Paleta e identidad tomadas del theme del sitio oficial.
+El plan Hobby es gratis pero **no permite uso comercial**. Si esto pasa a ser un
+canal de ventas formal del cliente, corresponde el plan Pro.
