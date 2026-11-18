@@ -11,10 +11,10 @@ Sitio estático de un solo archivo, sin build y sin dependencias de runtime.
 El número de WhatsApp que recibe los pedidos se define al comienzo del bloque
 SCRIPT de `index.html`:
 
-    const CONFIG = { WHATSAPP: "5491169835444", MARCA: "Marchand D'Arômes" };
+    const CONFIG = { WHATSAPP: "5491168657847", MARCA: "Marchand D'Arômes" };
 
 Formato internacional, sin el signo más, sin espacios ni guiones. Los celulares
-argentinos llevan un 9 después del 54: `+54 9 11 6983-5444` → `5491169835444`.
+argentinos llevan un 9 después del 54: `+54 9 11 6865-7847` → `5491168657847`.
 
 ---
 
@@ -130,48 +130,72 @@ completa está en [source/README.md](source/README.md).
 
 ## Las cajas y el formulario
 
-El producto son **tres tamaños de caja**, no combos sueltos:
+El producto son **tres tamaños de caja** con contenido fijo, no combos armados
+a medida:
 
-| Caja | Productos | Ejemplo | Precio de lista |
-|---|---|---|---|
-| Chica | 2 | Crema de Manos + Jabón Líquido | $25.000 |
-| Mediana | 3 | + Vela Aromática | $63.000 |
-| Grande | 4 | Absolu + Crema Cuerpo + Crema Manos + Difusor | $151.000 |
+| Caja | Productos | Contenido |
+|---|---|---|
+| Chica | 2 | Crema de Manos, Jabón Líquido |
+| Mediana | 3 | Crema de Manos, Jabón Líquido, Vela Aromática |
+| Grande | 4 | Absolu de Parfum, Crema de Cuerpo, Crema de Manos, Difusor de Varillas |
 
-Los precios son la suma de lista de los ejemplos, calculados desde
-`docs/catalogo.json`. **No se muestran en la página**: sirvieron para fijar los
-rangos de presupuesto del formulario.
+El contenido vive en la constante `CAJAS`, dentro del bloque 2 del script. Cada
+caja tiene un array `incluye` que alimenta a la vez la tarjeta de la sección
+"Las cajas" y la línea *Incluye* del mensaje de WhatsApp: se edita en un solo
+lugar y los dos quedan al día.
 
 ### El formulario
 
-Cuatro preguntas, sin datos de contacto:
+Dos preguntas, sin datos de contacto:
 
 1. **¿Para cuántas personas?** — 10 a 29 / 30 a 49 / 50 o más
-2. **¿Presupuesto por regalo?** — hasta $30.000 / $30.000 a $70.000 / más de $70.000
-3. **¿Quiénes lo reciben?** — mayoría hombres / mayoría mujeres / mixto
-4. **¿Para cuándo?** — fecha
+2. **¿Qué caja querés?** — Chica / Mediana / Grande
 
-El botón de WhatsApp aparece con las dos primeras respondidas, que es lo mínimo
-para cotizar. Las otras dos suman al mensaje si están.
+La segunda pregunta tiene **dos entradas sincronizadas**: los tres botones del
+formulario y las tres tarjetas de la sección "Las cajas", que son botones de
+verdad (`<button aria-pressed>`). Se elija donde se elija, `ponerCaja()` deja
+las dos vistas en el mismo estado. Si alguien elige desde la tarjeta y todavía
+no respondió cuántas personas, la página lo baja sola al formulario.
 
-El presupuesto resalta una caja mediante `CAJA_POR_PRESUPUESTO`, y el público
-sugiere aromas mediante `AROMAS`. Las dos tablas están juntas en el script y se
-editan sin tocar el resto.
+Con las dos respuestas aparece el bloque de cierre y la barra fija de WhatsApp.
+El mensaje queda así:
 
-### Decisiones sobre la corrección del cliente
+    Hola Marchand D'Arômes
+    Quiero armar un pedido de *regalos corporativos*.
+    *Caja:* Caja Mediana (3 productos)
+    *Incluye:* Crema de Manos, Jabón Líquido, Vela Aromática
+    *Para:* 30 a 49 personas
+    ¿Me arman una propuesta?
 
-- **Los montos venían como `$[X]` y `$[Y]`, y solo había dos rangos.** Con tres
-  tamaños de caja, un presupuesto alto no tenía dónde ubicarse. Se definieron
-  tres rangos alineados a los precios de lista reales. **Confirmar los montos**
-  antes de publicar: si hay bonificación por volumen, cambian.
-- **La sugerencia de aromas por género es eso, una sugerencia.** Va al mensaje
-  como "aromas que me gustarían", no como algo cerrado — el FAQ ya aclara que se
-  confirman según disponibilidad.
-- **Dos plazos distintos en el material original:** el formulario dice "al menos
-  15 días de anticipación" si lleva personalización y el FAQ dice "2 semanas"
-  para fin de año. Se respetaron ambos textos tal cual; si debe ser un solo
-  número, hay que unificarlos.
-- **"Frambuesa & Casis"** se escribió **Cassis**, como figura en la tienda.
+### Decisiones sobre esta versión
+
+- **Se eliminó la pregunta de presupuesto.** Al elegir la caja directamente, el
+  rango de inversión queda implícito y no hay que publicar montos que todavía
+  no están confirmados. También desaparecieron las preguntas de público y fecha,
+  junto con la sugerencia automática de aromas: menos fricción, más gente
+  llegando al chat.
+- **El contenido de las cajas es provisorio.** Se tomaron los productos que ya
+  figuraban como ejemplo. **Pendiente de confirmar con el cliente** antes de
+  publicar.
+- **La nota de los 15 días** pasó a colgar de la pregunta 2, que es donde
+  quedaba el último texto del formulario.
+- **El FAQ cierra empujando al chat.** El título dejó de ser "Antes de
+  escribirnos" — que frenaba — y pasó a "Lo que más nos preguntan", con un
+  botón de WhatsApp al pie de la lista para quien no encuentre su respuesta.
+
+### Sello Empresa B
+
+En el pie, dentro de `.sello`. Es un **SVG dibujado a mano, no el archivo
+oficial de Sistema B**: sirve para ver el bloque en su lugar y con las
+proporciones correctas.
+
+> **Antes de publicar:** reemplazar por el logotipo oficial que entrega Sistema
+> B y verificar que la certificación de la empresa esté vigente. El sello es una
+> marca registrada con condiciones de uso propias, y mostrarlo sin certificación
+> vigente es una afirmación comercial falsa.
+
+El reemplazo es directo: cambiar el `<svg>` por un `<img src="...">` dentro de
+`.sello`, que ya tiene el tamaño y la alineación resueltos.
 
 ## Móvil
 
@@ -195,9 +219,14 @@ caso la caja se muestra abierta y la sección deja de ser sticky.
   productos, esas URLs dejan de responder. Los frames de la caja, en cambio,
   viven en el repo. Decisión tomada a conciencia.
 
+- **Sello Empresa B:** el SVG del pie es un dibujo propio, no el archivo
+  oficial. Hay que reemplazarlo y confirmar que la certificación esté vigente.
+
+- **Contenido de las cajas:** los productos de cada tamaño son los que venían
+  como ejemplo. Falta la lista definitiva del cliente.
+
 - **Contenido comercial asumido, pendiente de validación:** plazos de 7 a 15
-  días hábiles, presupuesto en 24 hs, entrega multi-sede. Están en la sección
-  "Cómo sigue".
+  días hábiles, presupuesto en 24 hs. Están en el banner y en el FAQ.
 
 - **Verificar en un teléfono real.** El panel de previsualización usado durante
   el desarrollo no renderiza en continuo: no corren `requestAnimationFrame` ni

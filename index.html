@@ -146,16 +146,19 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
 .paso h3{margin:14px 0 10px;font-size:1.05rem;}
 .paso p{margin:0;font-size:11.5px;line-height:1.9;color:var(--ink-soft);}
 
-/* ---------- LAS CAJAS ---------- */
+/* ---------- LAS CAJAS (tarjetas seleccionables) ---------- */
 .cajas{display:grid;gap:20px;grid-template-columns:1fr;}
 @media(min-width:800px){.cajas{grid-template-columns:repeat(3,1fr);}}
 .caja{
   display:flex;flex-direction:column;background:var(--bg);border:1px solid var(--line);
-  overflow:hidden;transition:border-color .3s var(--ease),transform .3s var(--ease);
+  overflow:hidden;width:100%;padding:0;text-align:left;color:var(--ink);font:inherit;cursor:pointer;
+  transition:border-color .3s var(--ease),transform .3s var(--ease),box-shadow .3s var(--ease);
 }
 .caja:hover{border-color:var(--ink);transform:translateY(-3px);}
-.caja.is-rec{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);}
-.caja__img{position:relative;aspect-ratio:4/3;background:#000;overflow:hidden;}
+.caja:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
+.caja:active{transform:scale(.993);}
+.caja.is-on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);}
+.caja__img{position:relative;display:block;aspect-ratio:4/3;background:#000;overflow:hidden;}
 .caja__img img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s var(--ease),transform 1s var(--ease);}
 .caja__img img.is-loaded{opacity:1;}
 .caja:hover .caja__img img{transform:scale(1.04);}
@@ -164,16 +167,31 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
   font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;padding:7px 13px;
   opacity:0;transition:opacity .35s var(--ease);
 }
-.caja.is-rec .caja__tag{opacity:1;}
-.caja__body{padding:26px 24px 28px;flex:1;display:flex;flex-direction:column;}
-.caja__n{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);}
-.caja h3{margin:9px 0 0;}
-.caja__d{font-size:12px;line-height:1.9;color:var(--ink-soft);margin:12px 0 0;}
-.caja__ej{
-  margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--line-soft);
-  font-size:11px;line-height:1.8;color:var(--ink-mute);
+.caja.is-on .caja__tag{opacity:1;}
+.caja__body{padding:26px 24px 24px;flex:1;display:flex;flex-direction:column;}
+.caja__n{display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);}
+.caja__h{display:block;font-family:var(--heading);font-size:clamp(1.15rem,2.2vw,1.4rem);font-weight:700;line-height:1.2;margin:9px 0 0;}
+.caja__d{display:block;font-size:12px;line-height:1.9;color:var(--ink-soft);margin:12px 0 0;}
+.caja__inc{display:block;margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--line-soft);}
+.caja__inc b{display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:9px;font-weight:500;}
+.caja__inc i{
+  display:block;font-style:normal;font-size:11.5px;line-height:1.75;color:var(--ink-soft);
+  position:relative;padding-left:15px;margin-top:4px;
 }
-.caja__ej b{display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;font-weight:500;}
+.caja__inc i::before{content:"";position:absolute;left:0;top:.72em;width:7px;height:1px;background:var(--gold-deep);}
+.caja__pick{
+  display:flex;align-items:center;gap:11px;margin-top:auto;padding-top:22px;
+  font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);
+  transition:color .3s var(--ease);
+}
+.caja__pick::before{
+  content:"";flex:none;width:16px;height:16px;border:1px solid var(--line);border-radius:50%;
+  transition:border-color .3s var(--ease),background .3s var(--ease),box-shadow .3s var(--ease);
+}
+.caja__pick::after{content:"Elegir esta caja";}
+.caja.is-on .caja__pick{color:var(--ink);}
+.caja.is-on .caja__pick::before{border-color:var(--ink);background:var(--ink);box-shadow:inset 0 0 0 3px var(--bg);}
+.caja.is-on .caja__pick::after{content:"Caja elegida";}
 
 /* aromas */
 .aromas{margin-top:34px;text-align:center;}
@@ -213,13 +231,7 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
 .opt b{display:block;font-family:var(--heading);font-size:1.02rem;font-weight:700;line-height:1.25;}
 .opt span{display:block;font-size:10.5px;color:var(--ink-mute);margin-top:5px;line-height:1.65;}
 
-.fecha{display:flex;flex-direction:column;gap:9px;max-width:320px;}
-.fecha input{
-  font-family:var(--body);font-size:16px;color:var(--ink);background:var(--bg);
-  border:1px solid var(--line);padding:15px 14px;outline:none;border-radius:0;width:100%;
-  transition:border-color .3s var(--ease);
-}
-.fecha input:focus{border-color:var(--ink);}
+.q__nota a{color:var(--ink);text-underline-offset:3px;}
 
 /* ---------- CIERRE / CTA ---------- */
 .cierre{
@@ -287,6 +299,24 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
 }
 .faq details[open] summary::after{transform:rotate(135deg);}
 .faq p{margin:0 0 22px;font-size:12px;color:var(--ink-soft);line-height:2;max-width:66ch;}
+/* ---------- CIERRE DEL FAQ ---------- */
+.faq__mas{text-align:center;margin:36px 0 0;}
+.faq__mas p{font-size:12px;color:var(--ink-soft);margin:0 auto 18px;max-width:40ch;line-height:1.9;}
+.faq__mas a{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  background:var(--wa);color:#06281a;border:1px solid var(--wa);text-decoration:none;
+  padding:17px 28px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;
+  transition:filter .3s var(--ease),transform .2s var(--ease);
+}
+.faq__mas a:hover{filter:brightness(1.07);}
+.faq__mas a:active{transform:scale(.98);}
+.faq__mas a svg{width:17px;height:17px;}
+
+/* ---------- SELLO EMPRESA B ---------- */
+.sello{display:flex;align-items:center;gap:14px;margin:26px 0 0;}
+.sello svg{width:38px;height:auto;flex:none;color:var(--ink);}
+.sello span{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);line-height:1.8;}
+
 /* ---------- FOOTER ---------- */
 .site-foot{border-top:1px solid var(--line);padding:56px 0 30px;}
 .foot{display:grid;gap:34px;}
@@ -322,6 +352,8 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
   .close-up{padding:34px 22px;}
   .btn-wa{width:100%;padding:20px 18px;font-size:11px;}
   .paso{padding:28px 22px 32px;}
+  .caja__body{padding:22px 20px 20px;}
+  .faq__mas a{width:100%;}
   .site-foot{padding:44px 0 26px;}
   .foot a{padding:12px 0;}
 }
@@ -447,7 +479,7 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
     <div class="sec__head reveal">
       <p class="eyebrow">Tu propuesta</p>
       <h2>Armá tu pedido</h2>
-      <p>Contanos un poco y te mandamos una propuesta.</p>
+      <p>Dos respuestas y te abrimos el WhatsApp con el pedido ya escrito.</p>
     </div>
 
     <div class="ask">
@@ -461,29 +493,13 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
       </div>
 
       <div class="q reveal-self">
-        <div class="q__top"><span class="q__n">2</span><span class="q__t">¿Tenés presupuesto estimado por regalo?</span></div>
-        <div class="opts" id="qPresupuesto">
-          <button type="button" class="opt" data-v="b1"><b>Hasta $30.000</b><span>Caja chica</span></button>
-          <button type="button" class="opt" data-v="b2"><b>Entre $30.000 y $70.000</b><span>Caja mediana</span></button>
-          <button type="button" class="opt" data-v="b3"><b>Más de $70.000</b><span>Caja grande</span></button>
+        <div class="q__top"><span class="q__n">2</span><span class="q__t">¿Qué caja querés?</span></div>
+        <div class="opts" id="qCaja">
+          <button type="button" class="opt" data-v="chica"><b>Caja Chica</b><span>2 productos</span></button>
+          <button type="button" class="opt" data-v="mediana"><b>Caja Mediana</b><span>3 productos</span></button>
+          <button type="button" class="opt" data-v="grande"><b>Caja Grande</b><span>4 productos</span></button>
         </div>
-      </div>
-
-      <div class="q reveal-self">
-        <div class="q__top"><span class="q__n">3</span><span class="q__t">¿Quiénes lo reciben?</span></div>
-        <div class="opts" id="qPublico">
-          <button type="button" class="opt" data-v="h"><b>Mayoría hombres</b></button>
-          <button type="button" class="opt" data-v="m"><b>Mayoría mujeres</b></button>
-          <button type="button" class="opt" data-v="x"><b>Mixto</b></button>
-        </div>
-      </div>
-
-      <div class="q reveal-self">
-        <div class="q__top"><span class="q__n">4</span><span class="q__t">¿Para cuándo lo necesitás?</span></div>
-        <div class="fecha">
-          <input type="date" id="qFecha" aria-label="Fecha estimada de entrega">
-        </div>
-        <p class="q__nota">Te recomendamos pedir con al menos 15 días de anticipación en caso que lleve personalización.</p>
+        <p class="q__nota">También podés elegirla tocando cualquiera de <a href="#cajas">las tres cajas</a>. Te recomendamos pedir con al menos 15 días de anticipación en caso que lleve personalización.</p>
       </div>
     </div>
 
@@ -517,7 +533,7 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
   <div class="wrap">
     <div class="sec__head reveal">
       <p class="eyebrow">Preguntas frecuentes</p>
-      <h2>Antes de<br>escribirnos</h2>
+      <h2>Lo que más<br>nos preguntan</h2>
     </div>
     <div class="faq reveal">
       <details>
@@ -545,6 +561,11 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
         <p>Sí. Los aromas se confirman de acuerdo a la disponibilidad al momento de la confirmación de la compra.</p>
       </details>
     </div>
+
+    <div class="faq__mas reveal-self">
+      <p>¿Tu pregunta no está acá? Escribinos y te respondemos al toque.</p>
+      <a id="faqWa" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.57-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.47s1.07 2.86 1.22 3.06c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35M12.04 21.5h-.01a9.45 9.45 0 0 1-4.8-1.32l-.35-.2-3.57.93.96-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44a9.4 9.4 0 0 1 6.68 2.77 9.37 9.37 0 0 1 2.76 6.68c0 5.2-4.24 9.44-9.46 9.44M20.52 3.49A11.8 11.8 0 0 0 12.04 0C5.46 0 .11 5.35.1 11.93c0 2.1.55 4.16 1.6 5.97L0 24l6.25-1.64a11.9 11.9 0 0 0 5.79 1.47h.01c6.58 0 11.93-5.35 11.93-11.93a11.86 11.86 0 0 0-3.46-8.41"/></svg>Hablar por WhatsApp</a>
+    </div>
   </div>
 </section>
 
@@ -554,6 +575,20 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
       <div>
         <img src="https://acdn-us.mitiendanube.com/stores/001/356/042/themes/common/logo-103661872-1601914931-a91680a14a68222c357ec1d8da769dc41601914931.png" alt="Marchand D'Arômes" style="height:42px;width:auto">
         <p>Fragancias, body care y perfumería para el hogar, cuidando la calidad de sus texturas, la pureza de sus aromas y la estética de su packaging.</p>
+        <div class="sello">
+          <svg viewBox="0 0 51 84" role="img" aria-label="Empresa B certificada" focusable="false">
+            <rect width="51" height="84" fill="currentColor"/>
+            <g fill="none" stroke="#fff" stroke-width="4.4">
+              <circle cx="20.5" cy="20" r="6.2"/>
+              <path d="M20.5 30.5V61.5"/>
+              <path d="M20.5 32.6h7.2a6.2 6.2 0 0 1 0 12.4h-7.2"/>
+              <path d="M20.5 47.2h8.8a7.1 7.1 0 0 1 0 14.2h-8.8"/>
+            </g>
+            <text x="25.4" y="75" text-anchor="middle" fill="#fff" font-size="5.8" letter-spacing="0.9"
+                  font-family="Roboto Mono,ui-monospace,monospace">EMPRESA B</text>
+          </svg>
+          <span>Empresa B<br>certificada</span>
+        </div>
       </div>
       <div>
         <h4>Tienda</h4>
@@ -579,7 +614,7 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
 </footer>
 
 <div class="dock" id="dock">
-  <div class="dock__txt"><b id="dockNom">—</b><span id="dockSub">combo elegido</span></div>
+  <div class="dock__txt"><b id="dockNom">—</b><span id="dockSub">caja elegida</span></div>
   <a id="dockWa" href="#" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.57-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.47s1.07 2.86 1.22 3.06c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35M12.04 21.5h-.01a9.45 9.45 0 0 1-4.8-1.32l-.35-.2-3.57.93.96-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44a9.4 9.4 0 0 1 6.68 2.77 9.37 9.37 0 0 1 2.76 6.68c0 5.2-4.24 9.44-9.46 9.44M20.52 3.49A11.8 11.8 0 0 0 12.04 0C5.46 0 .11 5.35.1 11.93c0 2.1.55 4.16 1.6 5.97L0 24l6.25-1.64a11.9 11.9 0 0 0 5.79 1.47h.01c6.58 0 11.93-5.35 11.93-11.93a11.86 11.86 0 0 0-3.46-8.41"/></svg>
     Pedir
@@ -591,7 +626,7 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
    ░░ CONFIGURACIÓN ░░
    WHATSAPP: formato internacional, sin "+", sin espacios ni guiones.
    ========================================================================== */
-const CONFIG = { WHATSAPP: "5491169835444", MARCA: "Marchand D'Arômes" };
+const CONFIG = { WHATSAPP: "5491168657847", MARCA: "Marchand D'Arômes" };
 
 const $  = (s,c=document)=>c.querySelector(s);
 /* Alto real del viewport. En mobile cambia cuando se oculta la barra de
@@ -778,7 +813,8 @@ const RUTA = i => "box/b" + String(i).padStart(2,"0") + ".webp";
 })();
 
 /* ============================================================================
-   2. LAS CAJAS — tres tamaños. El presupuesto elegido resalta una.
+   2. LAS CAJAS — tres tamaños, con contenido fijo.
+      La tarjeta es el selector: tocarla equivale a responder la pregunta 2.
    ========================================================================== */
 const IMG = "https://acdn-us.mitiendanube.com/stores/001/356/042/products/";
 function srcsetDe(a){
@@ -789,120 +825,121 @@ function srcsetDe(a){
 const CAJAS = [
   { id:"chica", nom:"Caja Chica", n:"2 productos",
     desc:"Un detalle que dice mucho. Ideal para fin de año, bienvenidas o clientes.",
-    ej:"Crema de Manos + Jabón Líquido",
+    incluye:["Crema de Manos", "Jabón Líquido"],
     img:"caja-cremas-4b33944efe2c056d2c17660693621667-640-0.webp", bg:"#000" },
 
   { id:"mediana", nom:"Caja Mediana", n:"3 productos",
     desc:"Cuidado personal y aroma para la casa, en equilibrio justo.",
-    ej:"Crema de Manos + Jabón Líquido + Vela Aromática",
+    incluye:["Crema de Manos", "Jabón Líquido", "Vela Aromática"],
     img:"campana-bolsa-y-vela-26b994caec223d18bc17561226418165-640-0.webp", bg:"#000" },
 
   { id:"grande", nom:"Caja Grande", n:"4 productos",
     desc:"La experiencia Marchand completa.",
-    ej:"Absolu de Parfum + Crema de Cuerpo + Crema de Manos + Difusor de Varillas",
+    incluye:["Absolu de Parfum", "Crema de Cuerpo", "Crema de Manos", "Difusor de Varillas"],
     img:"absolu-le-marais-estuche-abierto-25_f-ceed7eb0f2b7d10a6d17599490935596-640-0.webp", bg:"#e5ddd2" }
 ];
 
-const PERSONAS    = { p1:"10 a 29 personas", p2:"30 a 49 personas", p3:"50 o más personas" };
-const PRESUPUESTO = { b1:"Hasta $30.000 por regalo", b2:"Entre $30.000 y $70.000 por regalo", b3:"Más de $70.000 por regalo" };
-const CAJA_POR_PRESUPUESTO = { b1:"chica", b2:"mediana", b3:"grande" };
-const PUBLICO     = { h:"Mayoría hombres", m:"Mayoría mujeres", x:"Mixto" };
-
-/* Sugerencia de aromas segun quien recibe. El equipo la confirma segun stock. */
-const AROMAS = {
-  h:["Santal & Violeta", "Oud & Maracuyá", "Bergamota & Orquídea"],
-  m:["Jazmín & Gardenia", "Frambuesa & Cassis", "Verbena & Limón"],
-  x:["Verbena & Limón", "Bergamota & Orquídea", "Santal & Violeta"]
-};
+const PERSONAS = { p1:"10 a 29 personas", p2:"30 a 49 personas", p3:"50 o más personas" };
 
 /* ============================================================================
-   3. EL FORMULARIO — cuatro preguntas, sin datos de contacto
+   3. EL FORMULARIO — dos preguntas: cuántas personas y qué caja
    ========================================================================== */
-const estado = { personas:null, presupuesto:null, publico:null, fecha:"" };
+const estado = { personas:null, caja:null };
 
 function pintarCajas(){
   const cont = $("#listaCajas");
   cont.innerHTML = CAJAS.map(c => `
-    <article class="caja" data-id="${c.id}">
+    <button type="button" class="caja" data-id="${c.id}" aria-pressed="false">
       <span class="caja__img" style="background:${c.bg}">
         <img src="${IMG}${c.img}" srcset="${srcsetDe(c.img)}"
              sizes="(max-width:799px) calc(100vw - 42px), 33vw"
              alt="${c.nom}" loading="lazy" decoding="async">
-        <span class="caja__tag">La que te recomendamos</span>
+        <span class="caja__tag">Caja elegida</span>
       </span>
       <span class="caja__body">
         <span class="caja__n">${c.n}</span>
-        <h3>${c.nom}</h3>
+        <span class="caja__h">${c.nom}</span>
         <span class="caja__d">${c.desc}</span>
-        <span class="caja__ej"><b>Por ejemplo</b>${c.ej}</span>
+        <span class="caja__inc">
+          <b>Qué incluye</b>
+          ${c.incluye.map(p => `<i>${p}</i>`).join("")}
+        </span>
+        <span class="caja__pick"></span>
       </span>
-    </article>`).join("");
+    </button>`).join("");
 
   $$(".caja__img img", cont).forEach(im => {
     const ok = () => im.classList.add("is-loaded");
     if(im.complete && im.naturalWidth) ok();
     else { im.addEventListener("load", ok, {once:true}); im.addEventListener("error", ok, {once:true}); }
   });
+
+  /* La tarjeta entera es el botón de selección. */
+  $$(".caja", cont).forEach(b => b.addEventListener("click", () => ponerCaja(b.dataset.id, true)));
 }
 pintarCajas();
 
-function elegir(cont, clave){
+(function elegirPersonas(){
+  const cont = $("#qPersonas");
   $$(".opt", cont).forEach(b => {
     b.addEventListener("click", () => {
       $$(".opt", cont).forEach(o => o.classList.remove("is-on"));
       b.classList.add("is-on");
-      estado[clave] = b.dataset.v;
+      estado.personas = b.dataset.v;
       revisar();
     });
   });
+})();
+
+$$(".opt", $("#qCaja")).forEach(b => {
+  b.addEventListener("click", () => ponerCaja(b.dataset.v, false));
+});
+
+/* Las tarjetas de arriba y los botones del formulario son el mismo dato:
+   se elija donde se elija, los dos quedan sincronizados. */
+function ponerCaja(id, desdeTarjeta){
+  estado.caja = id;
+
+  $$(".caja").forEach(el => {
+    const on = el.dataset.id === id;
+    el.classList.toggle("is-on", on);
+    el.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  $$(".opt", $("#qCaja")).forEach(o => o.classList.toggle("is-on", o.dataset.v === id));
+
+  /* Si eligió desde la tarjeta y todavía falta la otra pregunta, lo llevamos ahí. */
+  if(desdeTarjeta && !estado.personas){
+    setTimeout(() => $("#elegir").scrollIntoView({ behavior:"smooth", block:"start" }), 150);
+  }
+  revisar();
 }
-elegir($("#qPersonas"), "personas");
-elegir($("#qPresupuesto"), "presupuesto");
-elegir($("#qPublico"), "publico");
-$("#qFecha").addEventListener("change", e => { estado.fecha = e.target.value; revisar(); });
 
 function cajaElegida(){
-  return estado.presupuesto ? CAJAS.find(c => c.id === CAJA_POR_PRESUPUESTO[estado.presupuesto]) : null;
+  return estado.caja ? CAJAS.find(c => c.id === estado.caja) : null;
 }
 
 function revisar(){
-  /* La caja recomendada se resalta apenas hay presupuesto. */
-  const rec = cajaElegida();
-  $$(".caja").forEach(el => el.classList.toggle("is-rec", !!rec && el.dataset.id === rec.id));
-
-  /* El boton aparece con lo minimo para cotizar: cuantos y cuanto. */
-  const listo = !!(estado.personas && estado.presupuesto);
+  const listo = !!(estado.personas && estado.caja);
   cerrar(listo);
   if(listo && !revisar.yaFue){
     revisar.yaFue = true;
-    setTimeout(() => $("#cierre").scrollIntoView({ behavior:"smooth", block:"center" }), 150);
+    setTimeout(() => $("#cierre").scrollIntoView({ behavior:"smooth", block:"center" }), 250);
   }
 }
 
 /* ============================================================================
    4. EL MENSAJE DE WHATSAPP
    ========================================================================== */
-function fechaLinda(iso){
-  if(!iso) return "";
-  const [a,m,d] = iso.split("-");
-  return d + "/" + m + "/" + a;
-}
-
 function mensaje(){
   const c = cajaElegida();
   const L = [];
-  L.push("Hola " + CONFIG.MARCA + " 👋");
+  L.push("Hola " + CONFIG.MARCA + " \u{1F44B}");
   L.push("");
   L.push("Quiero armar un pedido de *regalos corporativos*.");
   L.push("");
-  if(c) L.push("*Caja:* " + c.nom + " (" + c.n + ")");
+  L.push("*Caja:* " + c.nom + " (" + c.n + ")");
+  L.push("*Incluye:* " + c.incluye.join(", "));
   L.push("*Para:* " + PERSONAS[estado.personas]);
-  L.push("*Presupuesto:* " + PRESUPUESTO[estado.presupuesto]);
-  if(estado.publico){
-    L.push("*Reciben:* " + PUBLICO[estado.publico]);
-    L.push("*Aromas que me gustarían:* " + AROMAS[estado.publico].join(", "));
-  }
-  if(estado.fecha) L.push("*La necesito para:* " + fechaLinda(estado.fecha));
   L.push("");
   L.push("¿Me arman una propuesta?");
   return L.join("\n");
@@ -922,17 +959,13 @@ function cerrar(mostrar){
   $("#waBtn").href = url;
   $("#dockWa").href = url;
   $("#cierreTitulo").textContent = "Pedir tu " + c.nom;
-  $("#waTexto").textContent = "Pedir por WhatsApp";
   $("#dockNom").textContent = c.nom;
   $("#dockSub").textContent = PERSONAS[estado.personas].toLowerCase();
 
   const chips = [
-    ["Caja", c.nom],
-    ["Para", PERSONAS[estado.personas]],
-    ["Presupuesto", PRESUPUESTO[estado.presupuesto].replace(" por regalo","")]
+    ["Caja", c.nom + " · " + c.n],
+    ["Para", PERSONAS[estado.personas]]
   ];
-  if(estado.publico) chips.push(["Reciben", PUBLICO[estado.publico]]);
-  if(estado.fecha)   chips.push(["Fecha", fechaLinda(estado.fecha)]);
   $("#resumen").innerHTML = chips.map(([k,v]) => `<span>${k} · <b>${v}</b></span>`).join("");
 }
 
@@ -941,6 +974,7 @@ function cerrar(mostrar){
    ========================================================================== */
 $("#yr").textContent = new Date().getFullYear();
 $("#footWa").href = "https://wa.me/" + CONFIG.WHATSAPP;
+$("#faqWa").href = "https://wa.me/" + CONFIG.WHATSAPP;
 
 (function movimiento(){
   const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
