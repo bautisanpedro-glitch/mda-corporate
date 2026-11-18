@@ -128,30 +128,50 @@ completa está en [source/README.md](source/README.md).
 
 ---
 
-## Las dos preguntas
+## Las cajas y el formulario
 
-Son solo dos, sin formulario ni datos de contacto:
+El producto son **tres tamaños de caja**, no combos sueltos:
 
-1. **Cuánto invertir por regalo** — cuatro rangos.
-2. **Cuántos regalos** — cuatro tramos de cantidad.
+| Caja | Productos | Ejemplo | Precio de lista |
+|---|---|---|---|
+| Chica | 2 | Crema de Manos + Jabón Líquido | $25.000 |
+| Mediana | 3 | + Vela Aromática | $63.000 |
+| Grande | 4 | Absolu + Crema Cuerpo + Crema Manos + Difusor | $151.000 |
 
-Los combos salen de un mapa directo `presupuesto → 3 combos`, en la constante
-`COMBOS` del script. No hay motor de scoring: con dos preguntas no hacía falta,
-y un mapa explícito es más fácil de curar comercialmente.
+Los precios son la suma de lista de los ejemplos, calculados desde
+`docs/catalogo.json`. **No se muestran en la página**: sirvieron para fijar los
+rangos de presupuesto del formulario.
 
-Para cambiar la oferta se edita `COMBOS`. Cada entrada define nombre, etiqueta,
-qué incluye, una línea de argumento y la foto:
+### El formulario
 
-    { nom:"Rituel Maison", band:"Más pedido",
-      items:["Arôme Diffuseur con varillas","Vela Aromática"],
-      why:"Aroma continuo más el ritual de encender.",
-      img:"difusor-....webp" }
+Cuatro preguntas, sin datos de contacto:
 
-El botón de WhatsApp aparece recién cuando hay un combo elegido, dice
-explícitamente qué se va a pedir ("Pedir Rituel Maison por WhatsApp") y en
-mobile queda fijo abajo. El mensaje se arma con combo, cantidad y rango.
+1. **¿Para cuántas personas?** — 10 a 29 / 30 a 49 / 50 o más
+2. **¿Presupuesto por regalo?** — hasta $30.000 / $30.000 a $70.000 / más de $70.000
+3. **¿Quiénes lo reciben?** — mayoría hombres / mayoría mujeres / mixto
+4. **¿Para cuándo?** — fecha
 
----
+El botón de WhatsApp aparece con las dos primeras respondidas, que es lo mínimo
+para cotizar. Las otras dos suman al mensaje si están.
+
+El presupuesto resalta una caja mediante `CAJA_POR_PRESUPUESTO`, y el público
+sugiere aromas mediante `AROMAS`. Las dos tablas están juntas en el script y se
+editan sin tocar el resto.
+
+### Decisiones sobre la corrección del cliente
+
+- **Los montos venían como `$[X]` y `$[Y]`, y solo había dos rangos.** Con tres
+  tamaños de caja, un presupuesto alto no tenía dónde ubicarse. Se definieron
+  tres rangos alineados a los precios de lista reales. **Confirmar los montos**
+  antes de publicar: si hay bonificación por volumen, cambian.
+- **La sugerencia de aromas por género es eso, una sugerencia.** Va al mensaje
+  como "aromas que me gustarían", no como algo cerrado — el FAQ ya aclara que se
+  confirman según disponibilidad.
+- **Dos plazos distintos en el material original:** el formulario dice "al menos
+  15 días de anticipación" si lleva personalización y el FAQ dice "2 semanas"
+  para fin de año. Se respetaron ambos textos tal cual; si debe ser un solo
+  número, hay que unificarlos.
+- **"Frambuesa & Casis"** se escribió **Cassis**, como figura en la tienda.
 
 ## Móvil
 

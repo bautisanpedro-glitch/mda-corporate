@@ -133,99 +133,116 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
    ============================================================ */
 .sec{padding:92px 0;}
 .sec--alt{background:var(--bg-alt);}
+.sec--tight{padding:56px 0;}
 .sec__head{max-width:620px;margin:0 auto 54px;text-align:center;}
 .sec__head h2{margin:16px 0 0;}
 .sec__head p{font-size:13px;line-height:2;color:var(--ink-soft);margin:20px 0 0;}
 
-/* ---------- LAS DOS PREGUNTAS ---------- */
-.ask{max-width:860px;margin:0 auto;display:grid;gap:40px;}
-.q__top{display:flex;align-items:baseline;gap:12px;margin-bottom:18px;}
+/* ---------- CÓMO FUNCIONA ---------- */
+.pasos{display:grid;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);}
+@media(min-width:760px){.pasos{grid-template-columns:repeat(3,1fr);}}
+.paso{background:var(--bg);padding:34px 28px 38px;}
+.paso .n{font-family:var(--heading);font-size:2rem;color:var(--gold-deep);line-height:1;}
+.paso h3{margin:14px 0 10px;font-size:1.05rem;}
+.paso p{margin:0;font-size:11.5px;line-height:1.9;color:var(--ink-soft);}
+
+/* ---------- LAS CAJAS ---------- */
+.cajas{display:grid;gap:20px;grid-template-columns:1fr;}
+@media(min-width:800px){.cajas{grid-template-columns:repeat(3,1fr);}}
+.caja{
+  display:flex;flex-direction:column;background:var(--bg);border:1px solid var(--line);
+  overflow:hidden;transition:border-color .3s var(--ease),transform .3s var(--ease);
+}
+.caja:hover{border-color:var(--ink);transform:translateY(-3px);}
+.caja.is-rec{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);}
+.caja__img{position:relative;aspect-ratio:4/3;background:#000;overflow:hidden;}
+.caja__img img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s var(--ease),transform 1s var(--ease);}
+.caja__img img.is-loaded{opacity:1;}
+.caja:hover .caja__img img{transform:scale(1.04);}
+.caja__tag{
+  position:absolute;left:0;top:0;background:var(--gold);color:var(--ink);
+  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;padding:7px 13px;
+  opacity:0;transition:opacity .35s var(--ease);
+}
+.caja.is-rec .caja__tag{opacity:1;}
+.caja__body{padding:26px 24px 28px;flex:1;display:flex;flex-direction:column;}
+.caja__n{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);}
+.caja h3{margin:9px 0 0;}
+.caja__d{font-size:12px;line-height:1.9;color:var(--ink-soft);margin:12px 0 0;}
+.caja__ej{
+  margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--line-soft);
+  font-size:11px;line-height:1.8;color:var(--ink-mute);
+}
+.caja__ej b{display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px;font-weight:500;}
+
+/* aromas */
+.aromas{margin-top:34px;text-align:center;}
+.aromas b{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-mute);font-weight:500;}
+.aromas ul{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.aromas li{border:1px solid var(--line);padding:9px 15px;font-size:10.5px;letter-spacing:.08em;color:var(--ink-soft);}
+
+/* ---------- PERSONALIZACIÓN ---------- */
+.perso{
+  border:1px solid var(--line);background:var(--bg);padding:44px 32px;text-align:center;
+  max-width:760px;margin:0 auto;
+}
+.perso h2{margin:14px 0 0;}
+.perso p{font-size:13px;line-height:2;color:var(--ink-soft);margin:18px auto 0;max-width:46ch;}
+
+/* ---------- ARMÁ TU PEDIDO ---------- */
+.ask{max-width:820px;margin:0 auto;display:grid;gap:34px;}
+.q__top{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;}
 .q__n{
   font-family:var(--heading);font-size:.95rem;color:var(--gold-deep);
   border:1px solid var(--line);width:30px;height:30px;display:grid;place-items:center;flex:none;
 }
-.q__t{font-family:var(--heading);font-size:clamp(1.25rem,2.6vw,1.7rem);font-weight:700;line-height:1.2;}
+.q__t{font-family:var(--heading);font-size:clamp(1.15rem,2.4vw,1.5rem);font-weight:700;line-height:1.25;}
+.q__nota{font-size:11px;color:var(--ink-mute);margin:10px 0 0;line-height:1.75;}
 .opts{display:grid;gap:10px;grid-template-columns:1fr;}
-@media(min-width:620px){.opts{grid-template-columns:repeat(2,1fr);}}
-@media(min-width:900px){.opts{grid-template-columns:repeat(4,1fr);}}
+@media(min-width:620px){.opts{grid-template-columns:repeat(3,1fr);}}
 .opt{
   position:relative;text-align:left;background:var(--bg);border:1px solid var(--line);
-  padding:20px 18px;width:100%;min-height:92px;
+  padding:18px 16px;width:100%;min-height:62px;
   transition:border-color .3s var(--ease),background .3s var(--ease),transform .18s var(--ease);
 }
-.sec--alt .opt{background:var(--bg);}
 .opt:hover{border-color:var(--ink);}
 .opt:active{transform:scale(.985);}
 .opt::after{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--gold);transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);}
 .opt.is-on{border-color:var(--ink);background:var(--bg-alt);}
 .opt.is-on::after{transform:scaleY(1);}
-.opt b{display:block;font-family:var(--heading);font-size:1.05rem;font-weight:700;line-height:1.25;}
-.opt span{display:block;font-size:10.5px;color:var(--ink-mute);margin-top:6px;line-height:1.7;}
+.opt b{display:block;font-family:var(--heading);font-size:1.02rem;font-weight:700;line-height:1.25;}
+.opt span{display:block;font-size:10.5px;color:var(--ink-mute);margin-top:5px;line-height:1.65;}
 
-/* ---------- COMBOS ---------- */
-.res{margin-top:70px;}
-.res[hidden]{display:none;}
-.res__top{text-align:center;margin-bottom:34px;}
-.res__top h3{font-size:clamp(1.4rem,3vw,2rem);}
-.res__top p{font-size:11.5px;color:var(--ink-mute);margin:10px 0 0;letter-spacing:.06em;}
-.combos{display:grid;gap:20px;grid-template-columns:1fr;}
-@media(min-width:760px){.combos{grid-template-columns:repeat(3,1fr);}}
-.combo{
-  display:flex;flex-direction:column;text-align:left;background:var(--bg);
-  border:1px solid var(--line);padding:0;width:100%;overflow:hidden;
-  transition:border-color .3s var(--ease),box-shadow .3s var(--ease),transform .3s var(--ease);
-  animation:pop .6s var(--ease) both;
+.fecha{display:flex;flex-direction:column;gap:9px;max-width:320px;}
+.fecha input{
+  font-family:var(--body);font-size:16px;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line);padding:15px 14px;outline:none;border-radius:0;width:100%;
+  transition:border-color .3s var(--ease);
 }
-.combo:nth-child(2){animation-delay:.09s}
-.combo:nth-child(3){animation-delay:.18s}
-@keyframes pop{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-.combo:hover{border-color:var(--ink);transform:translateY(-3px);}
-.combo.is-on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);}
-.combo__img{position:relative;aspect-ratio:1/1;background:#000;overflow:hidden;}
-.combo__img img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s var(--ease),transform 1s var(--ease);}
-.combo__img img.is-loaded{opacity:1;}
-.combo:hover .combo__img img{transform:scale(1.04);}
-.combo__pick{
-  position:absolute;right:12px;top:12px;width:24px;height:24px;border:1px solid var(--bg);
-  background:rgba(0,0,0,.35);display:grid;place-items:center;transition:all .3s var(--ease);
-}
-.combo__pick::after{content:"";width:9px;height:9px;background:transparent;transition:background .25s var(--ease);}
-.combo.is-on .combo__pick{background:var(--gold);border-color:var(--gold);}
-.combo.is-on .combo__pick::after{background:var(--ink);}
-.combo__body{padding:24px 22px 26px;flex:1;display:flex;flex-direction:column;}
-.combo__band{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);}
-.combo h3{margin:10px 0 0;}
-.combo__list{list-style:none;margin:16px 0 0;padding:0;}
-.combo__list li{font-size:11.5px;color:var(--ink-soft);padding:7px 0;border-bottom:1px solid var(--line-soft);display:flex;gap:9px;}
-.combo__list li::before{content:"—";color:var(--gold-deep);flex:none;}
-.combo__why{font-size:11px;line-height:1.8;color:var(--ink-mute);margin:16px 0 0;}
-.combo__cta{
-  margin-top:auto;padding-top:18px;font-size:10px;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--ink-mute);transition:color .3s var(--ease);
-}
-.combo.is-on .combo__cta{color:var(--ink);}
+.fecha input:focus{border-color:var(--ink);}
 
 /* ---------- CIERRE / CTA ---------- */
-.close-up{margin-top:54px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);padding:44px 34px;text-align:center;}
-.close-up[hidden]{display:none;}
-.close-up .eyebrow{color:var(--gold);}
-.close-up h3{margin:16px 0 0;color:var(--bg);font-size:clamp(1.4rem,3vw,2rem);}
-.close-up p{font-size:12px;color:rgba(240,238,235,.72);margin:14px auto 0;max-width:46ch;line-height:1.95;}
-.resumen{
-  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:26px 0 0;
+.cierre{
+  margin-top:46px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);
+  padding:40px 30px;text-align:center;
 }
+.cierre[hidden]{display:none;}
+.cierre .eyebrow{color:var(--gold);}
+.cierre h3{margin:14px 0 0;color:var(--bg);font-size:clamp(1.3rem,3vw,1.9rem);}
+.cierre p{font-size:12px;color:rgba(240,238,235,.72);margin:13px auto 0;max-width:46ch;line-height:1.95;}
+.resumen{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:24px 0 0;}
 .resumen span{border:1px solid rgba(240,238,235,.3);padding:7px 13px;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,238,235,.85);}
 .resumen b{color:var(--bg);font-weight:500;}
 .btn-wa{
-  display:inline-flex;align-items:center;justify-content:center;gap:12px;margin-top:28px;
-  padding:22px 40px;background:var(--wa);color:#06281a;border:1px solid var(--wa);
-  text-decoration:none;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
+  display:inline-flex;align-items:center;justify-content:center;gap:12px;margin-top:26px;
+  padding:21px 36px;background:var(--wa);color:#06281a;border:1px solid var(--wa);
+  text-decoration:none;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;
   transition:transform .2s var(--ease),filter .3s var(--ease);
 }
 .btn-wa:hover{filter:brightness(1.07);}
 .btn-wa:active{transform:scale(.98);}
 .btn-wa svg{width:20px;height:20px;}
-.close-up small{display:block;margin-top:14px;font-size:10px;color:rgba(240,238,235,.5);letter-spacing:.1em;}
+.cierre small{display:block;margin-top:13px;font-size:10px;color:rgba(240,238,235,.5);letter-spacing:.1em;}
 
 /* barra fija en mobile */
 .dock{
@@ -245,14 +262,31 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
 .dock a svg{width:17px;height:17px;}
 @media(min-width:900px){.dock{display:none;}}
 
-/* ---------- COMO SIGUE ---------- */
-.pasos{display:grid;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);}
-@media(min-width:760px){.pasos{grid-template-columns:repeat(3,1fr);}}
-.paso{background:var(--bg);padding:34px 28px 38px;}
-.paso .n{font-family:var(--heading);font-size:2rem;color:var(--gold-deep);line-height:1;}
-.paso h3{margin:14px 0 10px;font-size:1.05rem;}
-.paso p{margin:0;font-size:11.5px;line-height:1.9;color:var(--ink-soft);}
+/* ---------- AVISO PEDIDOS CHICOS ---------- */
+.aviso{
+  border:1px solid var(--line);background:var(--bg-alt);padding:34px 28px;text-align:center;
+  max-width:700px;margin:0 auto;
+}
+.aviso h3{font-size:clamp(1.1rem,2.4vw,1.4rem);margin:0;}
+.aviso p{font-size:12px;color:var(--ink-soft);margin:12px auto 0;max-width:44ch;line-height:1.9;}
+.aviso .btn{margin-top:22px;}
 
+/* ---------- FAQ ---------- */
+.faq{max-width:820px;margin:0 auto;border-top:1px solid var(--line-soft);}
+.faq details{border-bottom:1px solid var(--line-soft);}
+.faq summary{
+  padding:22px 0;cursor:pointer;list-style:none;display:flex;justify-content:space-between;
+  gap:18px;font-family:var(--heading);font-size:1.02rem;font-weight:700;line-height:1.3;
+  transition:color .3s var(--ease);
+}
+.faq summary:hover{color:var(--gold-deep);}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary::after{
+  content:"+";color:var(--gold-deep);font-family:var(--body);font-size:1.1rem;
+  display:inline-block;transition:transform .4s var(--ease);flex:none;
+}
+.faq details[open] summary::after{transform:rotate(135deg);}
+.faq p{margin:0 0 22px;font-size:12px;color:var(--ink-soft);line-height:2;max-width:66ch;}
 /* ---------- FOOTER ---------- */
 .site-foot{border-top:1px solid var(--line);padding:56px 0 30px;}
 .foot{display:grid;gap:34px;}
@@ -310,9 +344,9 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
       <img src="https://acdn-us.mitiendanube.com/stores/001/356/042/themes/common/logo-103661872-1601914931-a91680a14a68222c357ec1d8da769dc41601914931.png" alt="Marchand D'Arômes">
     </a>
     <nav class="nav">
-      <a href="https://www.marchandaromes.com.ar/">Tienda</a>
-      <a href="#elegir">Armar mi regalo</a>
-      <a href="#como">Cómo sigue</a>
+      <a href="#cajas">Las cajas</a>
+      <a href="#elegir">Armá tu pedido</a>
+      <a href="#faq">Preguntas</a>
     </nav>
     <a class="btn btn--gold" href="#elegir">Empezar</a>
   </div>
@@ -344,76 +378,172 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
   </div>
 </div>
 
-<!-- ══════════ LAS DOS PREGUNTAS ══════════ -->
-<section class="sec sec--alt" id="elegir">
+<!-- ══════════ CÓMO FUNCIONA ══════════ -->
+<section class="sec" id="como">
   <div class="wrap">
     <div class="sec__head reveal">
-      <p class="eyebrow">Dos pasos, nada más</p>
-      <h2>Armá tu regalo</h2>
-      <p>Sin formularios ni datos de contacto. Elegí las dos cosas que necesitamos saber y te mostramos los combos que entran.</p>
+      <p class="eyebrow">Cómo funciona</p>
+      <h2>Regalar bien es<br>así de simple</h2>
     </div>
-
-    <div class="ask">
-      <div class="q reveal-self">
-        <div class="q__top">
-          <span class="q__n">1</span>
-          <span class="q__t">¿Cuánto querés invertir por regalo?</span>
-        </div>
-        <div class="opts" id="qPresupuesto">
-          <button type="button" class="opt" data-v="b1"><b>Hasta $20.000</b><span>Un detalle con buena presencia</span></button>
-          <button type="button" class="opt" data-v="b2"><b>$20.000 a $40.000</b><span>El rango más elegido</span></button>
-          <button type="button" class="opt" data-v="b3"><b>$40.000 a $80.000</b><span>Sets de varias piezas</span></button>
-          <button type="button" class="opt" data-v="b4"><b>Más de $80.000</b><span>Perfumería fina y coffrets</span></button>
-        </div>
-      </div>
-
-      <div class="q reveal-self">
-        <div class="q__top">
-          <span class="q__n">2</span>
-          <span class="q__t">¿Cuántos necesitás?</span>
-        </div>
-        <div class="opts" id="qCantidad">
-          <button type="button" class="opt" data-v="q1"><b>10 a 25</b><span>Equipo chico o clientes clave</span></button>
-          <button type="button" class="opt" data-v="q2"><b>26 a 50</b><span>Un área o una cartera</span></button>
-          <button type="button" class="opt" data-v="q3"><b>51 a 100</b><span>Campaña de fin de año</span></button>
-          <button type="button" class="opt" data-v="q4"><b>Más de 100</b><span>Programa corporativo</span></button>
-        </div>
-      </div>
-    </div>
-
-    <div class="res" id="res" hidden>
-      <div class="res__top">
-        <h3 id="resTitulo">Tus combos</h3>
-        <p id="resSub">Tocá el que más te guste</p>
-      </div>
-      <div class="combos" id="combos"></div>
-
-      <div class="close-up" id="cierre" hidden>
-        <p class="eyebrow">Último paso</p>
-        <h3 id="cierreTitulo">Pedilo por WhatsApp</h3>
-        <p>Te abrimos el chat con el pedido ya escrito. Solo tenés que tocar enviar — nosotros te respondemos con el presupuesto cerrado.</p>
-        <div class="resumen" id="resumen"></div>
-        <a class="btn-wa" id="waBtn" href="#" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.57-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.47s1.07 2.86 1.22 3.06c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35M12.04 21.5h-.01a9.45 9.45 0 0 1-4.8-1.32l-.35-.2-3.57.93.96-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44a9.4 9.4 0 0 1 6.68 2.77 9.37 9.37 0 0 1 2.76 6.68c0 5.2-4.24 9.44-9.46 9.44M20.52 3.49A11.8 11.8 0 0 0 12.04 0C5.46 0 .11 5.35.1 11.93c0 2.1.55 4.16 1.6 5.97L0 24l6.25-1.64a11.9 11.9 0 0 0 5.79 1.47h.01c6.58 0 11.93-5.35 11.93-11.93a11.86 11.86 0 0 0-3.46-8.41"/></svg>
-          <span id="waTexto">Pedir por WhatsApp</span>
-        </a>
-        <small>Se abre WhatsApp con el mensaje listo. No se envía nada hasta que lo toques vos.</small>
-      </div>
+    <div class="pasos reveal-self">
+      <article class="paso">
+        <span class="n">1</span>
+        <h3>Elegí tus cajas</h3>
+        <p>Chica, mediana o grande. Podés combinar tamaños en un mismo pedido.</p>
+      </article>
+      <article class="paso">
+        <span class="n">2</span>
+        <h3>Contanos qué necesitás</h3>
+        <p>Completá el formulario y te armamos una propuesta a medida.</p>
+      </article>
+      <article class="paso">
+        <span class="n">3</span>
+        <h3>Recibilas listas para regalar</h3>
+        <p>Envueltas, con postal y envío a todo el país.</p>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- ══════════ CÓMO SIGUE ══════════ -->
-<section class="sec" id="como">
+<!-- ══════════ LAS CAJAS ══════════ -->
+<section class="sec sec--alt" id="cajas">
   <div class="wrap">
     <div class="sec__head reveal">
-      <p class="eyebrow">Cómo sigue</p>
-      <h2>Tres pasos y listo</h2>
+      <p class="eyebrow">Las cajas</p>
+      <h2>Tres tamaños,<br>el mismo cuidado</h2>
+      <p>Cada caja llega envuelta en nuestro papel de diseño propio, con una postal para escribir tu mensaje y una cinta negra para llevarla. Abrirla ya es parte del regalo.</p>
     </div>
-    <div class="pasos reveal-self">
-      <article class="paso"><span class="n">1</span><h3>Nos escribís</h3><p>Llega tu pedido con el combo, la cantidad y el rango de inversión que elegiste.</p></article>
-      <article class="paso"><span class="n">2</span><h3>Presupuesto en 24 hs</h3><p>Te confirmamos precio cerrado por unidad, aromas disponibles y opciones de personalización.</p></article>
-      <article class="paso"><span class="n">3</span><h3>Producción y entrega</h3><p>Entre 7 y 15 días hábiles. Entregamos en una o varias sedes, o a domicilio de cada persona.</p></article>
+
+    <div class="cajas" id="listaCajas"></div>
+
+    <div class="aromas reveal-self">
+      <b>Aromas disponibles</b>
+      <ul>
+        <li>Verbena &amp; Limón</li>
+        <li>Santal &amp; Violeta</li>
+        <li>Bergamota &amp; Orquídea</li>
+        <li>Jazmín &amp; Gardenia</li>
+        <li>Frambuesa &amp; Cassis</li>
+        <li>Oud &amp; Maracuyá</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PERSONALIZACIÓN ══════════ -->
+<section class="sec">
+  <div class="wrap">
+    <div class="perso reveal-self">
+      <p class="eyebrow">Personalización</p>
+      <h2>Hacelo tuyo</h2>
+      <p>Podés sumar el logo de tu empresa en la caja y un mensaje en la postal que colocamos en el interior.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ ARMÁ TU PEDIDO ══════════ -->
+<section class="sec sec--alt" id="elegir">
+  <div class="wrap">
+    <div class="sec__head reveal">
+      <p class="eyebrow">Tu propuesta</p>
+      <h2>Armá tu pedido</h2>
+      <p>Contanos un poco y te mandamos una propuesta.</p>
+    </div>
+
+    <div class="ask">
+      <div class="q reveal-self">
+        <div class="q__top"><span class="q__n">1</span><span class="q__t">¿Para cuántas personas es el regalo?</span></div>
+        <div class="opts" id="qPersonas">
+          <button type="button" class="opt" data-v="p1"><b>10 a 29</b></button>
+          <button type="button" class="opt" data-v="p2"><b>30 a 49</b></button>
+          <button type="button" class="opt" data-v="p3"><b>50 o más</b></button>
+        </div>
+      </div>
+
+      <div class="q reveal-self">
+        <div class="q__top"><span class="q__n">2</span><span class="q__t">¿Tenés presupuesto estimado por regalo?</span></div>
+        <div class="opts" id="qPresupuesto">
+          <button type="button" class="opt" data-v="b1"><b>Hasta $30.000</b><span>Caja chica</span></button>
+          <button type="button" class="opt" data-v="b2"><b>Entre $30.000 y $70.000</b><span>Caja mediana</span></button>
+          <button type="button" class="opt" data-v="b3"><b>Más de $70.000</b><span>Caja grande</span></button>
+        </div>
+      </div>
+
+      <div class="q reveal-self">
+        <div class="q__top"><span class="q__n">3</span><span class="q__t">¿Quiénes lo reciben?</span></div>
+        <div class="opts" id="qPublico">
+          <button type="button" class="opt" data-v="h"><b>Mayoría hombres</b></button>
+          <button type="button" class="opt" data-v="m"><b>Mayoría mujeres</b></button>
+          <button type="button" class="opt" data-v="x"><b>Mixto</b></button>
+        </div>
+      </div>
+
+      <div class="q reveal-self">
+        <div class="q__top"><span class="q__n">4</span><span class="q__t">¿Para cuándo lo necesitás?</span></div>
+        <div class="fecha">
+          <input type="date" id="qFecha" aria-label="Fecha estimada de entrega">
+        </div>
+        <p class="q__nota">Te recomendamos pedir con al menos 15 días de anticipación en caso que lleve personalización.</p>
+      </div>
+    </div>
+
+    <div class="cierre" id="cierre" hidden>
+      <p class="eyebrow">Último paso</p>
+      <h3 id="cierreTitulo">Pedilo por WhatsApp</h3>
+      <p>Te abrimos el chat con el pedido ya escrito. Solo tenés que tocar enviar — te respondemos con la propuesta.</p>
+      <div class="resumen" id="resumen"></div>
+      <a class="btn-wa" id="waBtn" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.57-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.47s1.07 2.86 1.22 3.06c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35M12.04 21.5h-.01a9.45 9.45 0 0 1-4.8-1.32l-.35-.2-3.57.93.96-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44a9.4 9.4 0 0 1 6.68 2.77 9.37 9.37 0 0 1 2.76 6.68c0 5.2-4.24 9.44-9.46 9.44M20.52 3.49A11.8 11.8 0 0 0 12.04 0C5.46 0 .11 5.35.1 11.93c0 2.1.55 4.16 1.6 5.97L0 24l6.25-1.64a11.9 11.9 0 0 0 5.79 1.47h.01c6.58 0 11.93-5.35 11.93-11.93a11.86 11.86 0 0 0-3.46-8.41"/></svg>
+        <span id="waTexto">Pedir por WhatsApp</span>
+      </a>
+      <small>Se abre WhatsApp con el mensaje listo. No se envía nada hasta que lo toques vos.</small>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ AVISO PEDIDOS CHICOS ══════════ -->
+<section class="sec sec--tight">
+  <div class="wrap">
+    <div class="aviso reveal-self">
+      <h3>¿Menos de 10 cajas?</h3>
+      <p>Comprá directo en nuestra tienda online, sin mínimo de compra.</p>
+      <a class="btn btn--ghost" href="https://www.marchandaromes.com.ar/" target="_blank" rel="noopener">Ir a la tienda →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PREGUNTAS FRECUENTES ══════════ -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="sec__head reveal">
+      <p class="eyebrow">Preguntas frecuentes</p>
+      <h2>Antes de<br>escribirnos</h2>
+    </div>
+    <div class="faq reveal">
+      <details>
+        <summary>¿Cuál es el pedido mínimo?</summary>
+        <p>10 cajas, y podés combinar tamaños. Si necesitás menos, podés comprar directo en nuestra tienda online.</p>
+      </details>
+      <details>
+        <summary>¿Cuánto tardan en entregar?</summary>
+        <p>Entre 5 y 10 días hábiles desde que confirmás el pedido. Para fin de año, te recomendamos pedir con 2 semanas de anticipación.</p>
+      </details>
+      <details>
+        <summary>¿Hacen envíos?</summary>
+        <p>Sí, enviamos a todo el país. El costo se cotiza de acuerdo al domicilio de entrega.</p>
+      </details>
+      <details>
+        <summary>¿Facturan?</summary>
+        <p>Sí, emitimos factura A y B a nombre de la empresa.</p>
+      </details>
+      <details>
+        <summary>¿Cómo se paga?</summary>
+        <p>Por transferencia bancaria o con tarjeta de crédito o débito. Contamos con condiciones para empresas que conversamos de acuerdo a las necesidades.</p>
+      </details>
+      <details>
+        <summary>¿Puedo elegir los aromas?</summary>
+        <p>Sí. Los aromas se confirman de acuerdo a la disponibilidad al momento de la confirmación de la compra.</p>
+      </details>
     </div>
   </div>
 </section>
@@ -435,7 +565,7 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
       <div>
         <h4>Corporativo</h4>
         <ul>
-          <li><a href="#elegir">Armar mi regalo</a></li>
+          <li><a href="#elegir">Armá tu pedido</a></li>
           <li><a id="footWa" href="#" target="_blank" rel="noopener">WhatsApp comercial</a></li>
           <li><a href="https://www.instagram.com/marchandaromes" target="_blank" rel="noopener">Instagram</a></li>
         </ul>
@@ -648,8 +778,7 @@ const RUTA = i => "box/b" + String(i).padStart(2,"0") + ".webp";
 })();
 
 /* ============================================================================
-   2. CATÁLOGO DE COMBOS — tres por cada rango de presupuesto
-   Los precios son de lista y sirven solo para ordenar; no se muestran.
+   2. LAS CAJAS — tres tamaños. El presupuesto elegido resalta una.
    ========================================================================== */
 const IMG = "https://acdn-us.mitiendanube.com/stores/001/356/042/products/";
 function srcsetDe(a){
@@ -657,165 +786,125 @@ function srcsetDe(a){
   return [240,320,480,640].map(w => IMG + base + "-" + w + "-0.webp " + w + "w").join(", ");
 }
 
-const COMBOS = {
-  b1: [
-    { nom:"Petit Geste", band:"El detalle",
-      items:["Crème Pour Les Mains 50 g","Tarjeta escrita a mano"],
-      why:"Liviano para enviar y agradecido en cualquier escritorio.",
-      img:"crema-bo-735f87ba87d1f251d217748912879319-640-0.webp" },
-    { nom:"Savon Liquide", band:"El clásico",
-      items:["Savon Liquide 250 ml","Caja con cinta negra"],
-      why:"Botella de vidrio ámbar con etiqueta de autor. Queda a la vista todos los días.",
-      img:"nueva-web-53-f24e64d2ac58c0dcf217633997675822-640-0.webp" },
-    { nom:"Bienvenue", band:"Welcome kit",
-      items:["Crème Pour Les Mains 50 g","Savon Liquide 250 ml"],
-      why:"El dúo que acompaña los primeros días y queda en uso diario.",
-      img:"nueva-web-44-de4e01df1defadb7ba17634002639489-640-0.webp" }
-  ],
-  b2: [
-    { nom:"Les Mains Duo", band:"Más elegido",
-      items:["Crème Pour Les Mains 75 g","Savon Liquide 250 ml"],
-      why:"Formato completo de las dos piezas que más se usan.",
-      img:"nueva-web-31-374796e8e35e031c7d17634019166308-640-0.webp" },
-    { nom:"Maison Signature", band:"Para el hogar",
-      items:["Maison Parfum · Home Spray"],
-      why:"La mejor relación impacto-precio de toda la línea.",
-      img:"home-spray-bo-9b2c93b8d90d2d959917806727011051-640-0.webp" },
-    { nom:"La Collection Crème", band:"Cuatro aromas",
-      items:["Estuche con 4 cremas de manos"],
-      why:"Se percibe como colección, no como muestra.",
-      img:"caja-cremas-4b33944efe2c056d2c17660693621667-640-0.webp" }
-  ],
-  b3: [
-    { nom:"Rituel du Corps", band:"Set completo",
-      items:["Crème Pour Le Corps","Savon Liquide 250 ml","Crème Pour Les Mains 75 g"],
-      why:"Tres piezas del mismo aroma: un ritual entero en una caja.",
-      img:"nueva-web-47-c98f637c7e1cf0ecd217634003014504-640-0.webp" },
-    { nom:"Rituel Maison", band:"Más pedido",
-      items:["Arôme Diffuseur con varillas","Vela Aromática"],
-      why:"Aroma continuo más el ritual de encender. El favorito para clientes estratégicos.",
-      img:"difusor-jg-b4b469b2bc8207dec317806719442689-640-0.webp" },
-    { nom:"Maison Complète", band:"Tres piezas",
-      items:["Maison Parfum · Home Spray","Vela Aromática","Crème Pour Les Mains 50 g"],
-      why:"Caja generosa, con volumen visual y variedad de uso.",
-      img:"home-spray-jg-3a28329675c7dc62ee17806724554061-640-0.webp" }
-  ],
-  b4: [
-    { nom:"Lumière Prestige", band:"Objeto de diseño",
-      items:["Vela Aromática","Campana de vidrio","Tijera corta pabilo"],
-      why:"Un objeto además de un aroma. Se queda en el living.",
-      img:"campana-bolsa-y-vela-26b994caec223d18bc17561226418165-640-0.webp" },
-    { nom:"Absolu Signature", band:"Perfumería fina",
-      items:["Absolu de Parfum en estuche"],
-      why:"Alta concentración. El regalo que se asocia directo a la jerarquía de la relación.",
-      img:"absolu-le-marais_f-38d02dab5be6bfd76c17599490922873-640-0.webp", bg:"#e5ddd2" },
-    { nom:"Coffret Prestige", band:"Lo máximo",
-      items:["Absolu de Parfum","Vela Aromática","Crème Pour Les Mains 50 g"],
-      why:"Nuestra propuesta máxima para cuentas estratégicas.",
-      img:"absolu-le-marais-estuche-abierto-25_f-ceed7eb0f2b7d10a6d17599490935596-640-0.webp", bg:"#e5ddd2" }
-  ]
-};
+const CAJAS = [
+  { id:"chica", nom:"Caja Chica", n:"2 productos",
+    desc:"Un detalle que dice mucho. Ideal para fin de año, bienvenidas o clientes.",
+    ej:"Crema de Manos + Jabón Líquido",
+    img:"caja-cremas-4b33944efe2c056d2c17660693621667-640-0.webp", bg:"#000" },
 
-const PRESUPUESTO = {
-  b1:"Hasta $20.000 por regalo", b2:"$20.000 a $40.000 por regalo",
-  b3:"$40.000 a $80.000 por regalo", b4:"Más de $80.000 por regalo"
+  { id:"mediana", nom:"Caja Mediana", n:"3 productos",
+    desc:"Cuidado personal y aroma para la casa, en equilibrio justo.",
+    ej:"Crema de Manos + Jabón Líquido + Vela Aromática",
+    img:"campana-bolsa-y-vela-26b994caec223d18bc17561226418165-640-0.webp", bg:"#000" },
+
+  { id:"grande", nom:"Caja Grande", n:"4 productos",
+    desc:"La experiencia Marchand completa.",
+    ej:"Absolu de Parfum + Crema de Cuerpo + Crema de Manos + Difusor de Varillas",
+    img:"absolu-le-marais-estuche-abierto-25_f-ceed7eb0f2b7d10a6d17599490935596-640-0.webp", bg:"#e5ddd2" }
+];
+
+const PERSONAS    = { p1:"10 a 29 personas", p2:"30 a 49 personas", p3:"50 o más personas" };
+const PRESUPUESTO = { b1:"Hasta $30.000 por regalo", b2:"Entre $30.000 y $70.000 por regalo", b3:"Más de $70.000 por regalo" };
+const CAJA_POR_PRESUPUESTO = { b1:"chica", b2:"mediana", b3:"grande" };
+const PUBLICO     = { h:"Mayoría hombres", m:"Mayoría mujeres", x:"Mixto" };
+
+/* Sugerencia de aromas segun quien recibe. El equipo la confirma segun stock. */
+const AROMAS = {
+  h:["Santal & Violeta", "Oud & Maracuyá", "Bergamota & Orquídea"],
+  m:["Jazmín & Gardenia", "Frambuesa & Cassis", "Verbena & Limón"],
+  x:["Verbena & Limón", "Bergamota & Orquídea", "Santal & Violeta"]
 };
-const CANTIDAD = { q1:"10 a 25 unidades", q2:"26 a 50 unidades", q3:"51 a 100 unidades", q4:"Más de 100 unidades" };
 
 /* ============================================================================
-   3. LAS DOS PREGUNTAS
+   3. EL FORMULARIO — cuatro preguntas, sin datos de contacto
    ========================================================================== */
-const estado = { presupuesto:null, cantidad:null, combo:null };
+const estado = { personas:null, presupuesto:null, publico:null, fecha:"" };
+
+function pintarCajas(){
+  const cont = $("#listaCajas");
+  cont.innerHTML = CAJAS.map(c => `
+    <article class="caja" data-id="${c.id}">
+      <span class="caja__img" style="background:${c.bg}">
+        <img src="${IMG}${c.img}" srcset="${srcsetDe(c.img)}"
+             sizes="(max-width:799px) calc(100vw - 42px), 33vw"
+             alt="${c.nom}" loading="lazy" decoding="async">
+        <span class="caja__tag">La que te recomendamos</span>
+      </span>
+      <span class="caja__body">
+        <span class="caja__n">${c.n}</span>
+        <h3>${c.nom}</h3>
+        <span class="caja__d">${c.desc}</span>
+        <span class="caja__ej"><b>Por ejemplo</b>${c.ej}</span>
+      </span>
+    </article>`).join("");
+
+  $$(".caja__img img", cont).forEach(im => {
+    const ok = () => im.classList.add("is-loaded");
+    if(im.complete && im.naturalWidth) ok();
+    else { im.addEventListener("load", ok, {once:true}); im.addEventListener("error", ok, {once:true}); }
+  });
+}
+pintarCajas();
 
 function elegir(cont, clave){
-  $$(".opt", cont).forEach(b=>{
-    b.addEventListener("click", ()=>{
-      $$(".opt", cont).forEach(o=>o.classList.remove("is-on"));
+  $$(".opt", cont).forEach(b => {
+    b.addEventListener("click", () => {
+      $$(".opt", cont).forEach(o => o.classList.remove("is-on"));
       b.classList.add("is-on");
       estado[clave] = b.dataset.v;
-      if(clave === "presupuesto") estado.combo = null;   // cambia el set, se reinicia
       revisar();
     });
   });
 }
+elegir($("#qPersonas"), "personas");
 elegir($("#qPresupuesto"), "presupuesto");
-elegir($("#qCantidad"), "cantidad");
+elegir($("#qPublico"), "publico");
+$("#qFecha").addEventListener("change", e => { estado.fecha = e.target.value; revisar(); });
 
-function revisar(){
-  const { presupuesto, cantidad } = estado;
-  if(!presupuesto || !cantidad){ $("#res").hidden = true; cerrar(false); return; }
-  pintarCombos(COMBOS[presupuesto]);
-  $("#res").hidden = false;
-  cerrar(!!estado.combo);
-  if(!revisar.yaFue){
-    revisar.yaFue = true;
-    setTimeout(()=> $("#res").scrollIntoView({behavior:"smooth", block:"start"}), 120);
-  }
+function cajaElegida(){
+  return estado.presupuesto ? CAJAS.find(c => c.id === CAJA_POR_PRESUPUESTO[estado.presupuesto]) : null;
 }
 
-function pintarCombos(lista){
-  const cont = $("#combos");
-  if(cont.dataset.set === estado.presupuesto) return;     // no repintar de gusto
-  cont.dataset.set = estado.presupuesto;
-  cont.innerHTML = lista.map((c,i)=>`
-    <button type="button" class="combo" data-i="${i}">
-      <span class="combo__img" style="background:${c.bg || "#000"}">
-        <img src="${IMG}${c.img}" srcset="${srcsetDe(c.img)}"
-             sizes="(max-width:759px) calc(100vw - 42px), 33vw"
-             alt="${c.nom}" loading="lazy" decoding="async">
-        <span class="combo__pick" aria-hidden="true"></span>
-      </span>
-      <span class="combo__body">
-        <span class="combo__band">${c.band}</span>
-        <h3>${c.nom}</h3>
-        <ul class="combo__list">${c.items.map(x=>`<li><span>${x}</span></li>`).join("")}</ul>
-        <span class="combo__why">${c.why}</span>
-        <span class="combo__cta">Elegir este</span>
-      </span>
-    </button>`).join("");
+function revisar(){
+  /* La caja recomendada se resalta apenas hay presupuesto. */
+  const rec = cajaElegida();
+  $$(".caja").forEach(el => el.classList.toggle("is-rec", !!rec && el.dataset.id === rec.id));
 
-  $$(".combo__img img", cont).forEach(im=>{
-    const ok = ()=>im.classList.add("is-loaded");
-    if(im.complete && im.naturalWidth) ok();
-    else { im.addEventListener("load", ok, {once:true}); im.addEventListener("error", ok, {once:true}); }
-  });
-
-  $$(".combo", cont).forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const i = +btn.dataset.i;
-      const mismo = estado.combo === i;
-      $$(".combo", cont).forEach(c=>c.classList.remove("is-on"));
-      if(mismo){ estado.combo = null; }
-      else { estado.combo = i; btn.classList.add("is-on"); }
-      $$(".combo__cta", cont).forEach((e,j)=> e.textContent = (j===estado.combo) ? "Elegido ✓" : "Elegir este");
-      cerrar(estado.combo !== null);
-    });
-  });
+  /* El boton aparece con lo minimo para cotizar: cuantos y cuanto. */
+  const listo = !!(estado.personas && estado.presupuesto);
+  cerrar(listo);
+  if(listo && !revisar.yaFue){
+    revisar.yaFue = true;
+    setTimeout(() => $("#cierre").scrollIntoView({ behavior:"smooth", block:"center" }), 150);
+  }
 }
 
 /* ============================================================================
-   4. CIERRE Y WHATSAPP
+   4. EL MENSAJE DE WHATSAPP
    ========================================================================== */
-function comboActual(){
-  if(estado.combo === null || !estado.presupuesto) return null;
-  return COMBOS[estado.presupuesto][estado.combo];
+function fechaLinda(iso){
+  if(!iso) return "";
+  const [a,m,d] = iso.split("-");
+  return d + "/" + m + "/" + a;
 }
 
 function mensaje(){
-  const c = comboActual();
+  const c = cajaElegida();
   const L = [];
   L.push("Hola " + CONFIG.MARCA + " 👋");
   L.push("");
-  L.push("Quiero pedir *regalos corporativos*.");
+  L.push("Quiero armar un pedido de *regalos corporativos*.");
   L.push("");
-  if(c){
-    L.push("*Combo:* " + c.nom);
-    L.push("*Incluye:* " + c.items.join(" + "));
+  if(c) L.push("*Caja:* " + c.nom + " (" + c.n + ")");
+  L.push("*Para:* " + PERSONAS[estado.personas]);
+  L.push("*Presupuesto:* " + PRESUPUESTO[estado.presupuesto]);
+  if(estado.publico){
+    L.push("*Reciben:* " + PUBLICO[estado.publico]);
+    L.push("*Aromas que me gustarían:* " + AROMAS[estado.publico].join(", "));
   }
-  L.push("*Cantidad:* " + CANTIDAD[estado.cantidad]);
-  L.push("*Inversión:* " + PRESUPUESTO[estado.presupuesto]);
+  if(estado.fecha) L.push("*La necesito para:* " + fechaLinda(estado.fecha));
   L.push("");
-  L.push("¿Me pasan el presupuesto?");
+  L.push("¿Me arman una propuesta?");
   return L.join("\n");
 }
 
@@ -824,24 +913,27 @@ function link(){
 }
 
 function cerrar(mostrar){
-  const caja = $("#cierre"), dock = $("#dock");
-  caja.hidden = !mostrar;
-  dock.classList.toggle("is-on", mostrar);
+  $("#cierre").hidden = !mostrar;
+  $("#dock").classList.toggle("is-on", mostrar);
   document.body.classList.toggle("has-dock", mostrar);
   if(!mostrar) return;
 
-  const c = comboActual();
-  const url = link();
+  const c = cajaElegida(), url = link();
   $("#waBtn").href = url;
   $("#dockWa").href = url;
-  $("#cierreTitulo").textContent = "Pedir " + c.nom;
-  $("#waTexto").textContent = "Pedir " + c.nom + " por WhatsApp";
+  $("#cierreTitulo").textContent = "Pedir tu " + c.nom;
+  $("#waTexto").textContent = "Pedir por WhatsApp";
   $("#dockNom").textContent = c.nom;
-  $("#dockSub").textContent = CANTIDAD[estado.cantidad].toLowerCase();
-  $("#resumen").innerHTML =
-    `<span>Combo · <b>${c.nom}</b></span>` +
-    `<span>Cantidad · <b>${CANTIDAD[estado.cantidad]}</b></span>` +
-    `<span>Inversión · <b>${PRESUPUESTO[estado.presupuesto]}</b></span>`;
+  $("#dockSub").textContent = PERSONAS[estado.personas].toLowerCase();
+
+  const chips = [
+    ["Caja", c.nom],
+    ["Para", PERSONAS[estado.personas]],
+    ["Presupuesto", PRESUPUESTO[estado.presupuesto].replace(" por regalo","")]
+  ];
+  if(estado.publico) chips.push(["Reciben", PUBLICO[estado.publico]]);
+  if(estado.fecha)   chips.push(["Fecha", fechaLinda(estado.fecha)]);
+  $("#resumen").innerHTML = chips.map(([k,v]) => `<span>${k} · <b>${v}</b></span>`).join("");
 }
 
 /* ============================================================================
