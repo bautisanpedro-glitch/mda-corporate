@@ -34,8 +34,8 @@ Dominio propio en **Settings → Domains**, agregando el `CNAME` que indica Verc
 
     .
     ├── index.html        # la página entera: HTML + CSS + JS
-    ├── box/              # 64 frames WebP de la caja abriéndose (1,2 MB)
-    ├── cajas/            # fotos de los tres tamaños, 4 anchos c/u (430 KB)
+    ├── banner/           # las dos fotos del hero, 3 anchos c/u (206 KB)
+    ├── cajas/            # fotos de los tres tamaños, 4 anchos c/u (490 KB)
     ├── vercel.json       # cleanUrls y headers de seguridad
     ├── .vercelignore     # qué va al repo pero no al deploy
     ├── .gitignore
@@ -43,96 +43,109 @@ Dominio propio en **Settings → Domains**, agregando el `CNAME` que indica Verc
     ├── docs/
     │   └── catalogo.json # referencia: 54 productos con precio e imagen
     └── source/           # material fuente, NO se publica
-        ├── caja.mov          # video original (9,4 MB, HEVC)
-        ├── encode-frames.py  # regenera la secuencia de frames
+        ├── banner/           # las dos fotos del hero, sin procesar
+        ├── banner-img.py     # regenera banner/
         ├── cajas/            # fotos originales del cliente (JPG/PNG)
         ├── cajas-img.py      # regenera cajas/ desde esos originales
-        └── README.md         # cómo rehacerla
+        ├── caja.mov          # video del banner viejo (9,4 MB, HEVC)
+        ├── encode-frames.py  # regeneraba los frames de ese banner
+        └── README.md         # cómo se hacía
 
-**Lo que se publica son ~1,8 MB**, casi todo la secuencia del banner. Una
-visita real baja bastante menos: de `cajas/` el navegador elige un solo ancho
-por foto (~130 KB las tres en un celular). El video original, las fotos sin
+La carpeta `box/`, con los 64 frames del banner animado, **ya no se usa**.
+Queda excluida del deploy por `.vercelignore` y se puede borrar del repo.
+
+**Lo que se publica son ~750 KB.** Una visita real baja mucho menos: tanto de
+`banner/` como de `cajas/` el navegador elige un solo ancho por foto. En un
+celular son ~47 KB del banner y ~130 KB de las tres cajas. El material sin
 procesar y el catálogo de referencia están en el repositorio pero excluidos del
 deploy por `.vercelignore`: sirven para mantener el proyecto, no para que los
 baje un visitante.
 
 ---
 
-## El banner: la caja que se abre
+## El banner
 
-Ocupa la pantalla completa y se abre a medida que bajás. Es lo primero y lo
-único que se ve al entrar.
+Dos fotos fijas del cliente, una por formato. Reemplazaron al banner animado
+que abría una caja cuadro por cuadro: eran 64 WebP y 1,2 MB, contra 47 KB de
+la foto que baja un celular hoy.
 
-### De dónde salen los frames
+| Formato | Original | Anchos | Donde |
+|---|---|---|---|
+| Vertical | 720×1280 (0,56) | 360 / 540 / 720 | hasta 899 px |
+| Horizontal | 1280×746 (1,72) | 640 / 960 / 1280 | desde 900 px |
 
-El video original (`.mov`, 2,6 s, 2160×3840, **HEVC**) no sirve para la web:
-Chrome y Firefox no decodifican HEVC de forma confiable. Por eso el banner **no
-usa video**, sino 64 imágenes WebP (660×1172, 1,2 MB en total) dibujadas sobre
-un canvas.
+La eleccion la hace `<picture>` con `media`, no JavaScript: es direccion de
+arte, no solo resolución, así que tiene que resolverse antes de que el
+navegador empiece a bajar nada. Las dos variantes van también en un `preload`
+con el mismo `media`, para que el hero no espere al parser.
 
-Los frames no están repartidos por tiempo sino **por movimiento acumulado**: se
-mide la diferencia entre frames consecutivos y se eligen 64 a intervalos iguales
-de movimiento. Así el scroll avanza parejo y no se gastan frames donde la caja
-está quieta.
+### Dónde va el texto
 
-### Cómo funciona
+Las dos tomas se midieron por franjas, buscando el desvío estándar de cada
+una: donde el desvío es bajo hay pared lisa, donde es alto hay producto.
 
-    progreso = -stage.top / (stage.alto - alto_viewport)   // 0 a 1
-    posicion = progreso × 63                               // con decimales
+- **La vertical** tiene el 0-33% limpio arriba (sd 8) y el 83-100% limpio abajo
+  (sd 8-10), con los productos en el medio. Calza exactamente con el layout que
+  ya tenía el hero: título arriba, botón abajo. Medido sobre el render final,
+  el texto queda a 16:1 de contraste en el peor 5% de los píxeles que tiene
+  detrás.
+- **La horizontal** no tiene ninguna franja horizontal limpia: la única zona
+  despejada es la columna izquierda. Por eso en escritorio el texto se corre a
+  la izquierda y el velo pasa a ser horizontal.
 
-La sección `.stage` mide 250vh (230vh en mobile) y adentro tiene un bloque
-`position:sticky` de un viewport de alto. Ese alto extra es el recorrido que
-alimenta la animación: unos 1050 px, es decir ~16 px de scroll por frame.
+### Por qué el escritorio es a sangre completa
 
-Tres cosas hacen que se sienta fluido y no a los saltos:
+Se probó primero partir la pantalla: panel de texto a la izquierda, foto a la
+derecha. No funciona con esta foto. El panel la obliga a un recorte vertical
+— a 1440×860 la ventana visible queda en 0,96 contra el 1,72 original — y se
+comen el aromatizador y el difusor. Se calculó para anchos de panel del 58 al
+70%: recién a partir del 70% entran los productos, y aún así cortan en
+pantallas de 1280.
 
-1. **Mezcla entre frames vecinos.** `posicion` tiene decimales: se dibuja el
-   frame entero y encima el siguiente con `globalAlpha` igual a la parte
-   decimal. Con eso 64 imágenes se ven como un movimiento continuo.
-2. **Amortiguación.** El valor dibujado persigue al del scroll con un factor de
-   0,2 por cuadro. El scroll de los celulares llega a tirones; esto lo suaviza.
-3. **`ImageBitmap`.** Los frames se bajan con `fetch` y se convierten con
-   `createImageBitmap`, que entrega el mapa de bits ya decodificado. Dibujar un
-   `ImageBitmap` no bloquea el hilo principal; dibujar un `<img>` sí puede.
+A sangre completa el recorte es mínimo, porque la foto y el viewport son
+apaisados los dos:
 
-El dibujado corre en un lazo de `requestAnimationFrame` que lee la posición del
-scroll en cada cuadro, en lugar de reaccionar al evento `scroll` (que en iOS
-llega con menos frecuencia durante el desplazamiento por inercia). El lazo se
-pausa cuando el hero sale de pantalla.
+| Viewport | Recorte |
+|---|---|
+| 1280×800 | 43 px por lado |
+| 1440×860 | 15 px por lado |
+| 1920×1080 | 13 px arriba y abajo |
 
-### Carga
+### El velo
 
-El frame 0 está precargado con `<link rel=preload>` y es el LCP. El resto entra
-de a tandas de 6, **en orden de subdivisión**: primero los extremos, después los
-medios, después el relleno. Si alguien scrollea antes de que termine, se dibuja
-el frame más cercano que ya esté disponible, así que la animación nunca muestra
-un hueco: arranca tosca y se afina.
+El degradado que aclara el fondo del texto no se eligió a ojo. Se midió el
+contraste resultante sobre el peor 5% de los píxeles que quedan detrás del
+bloque de texto, con cinco intensidades:
 
-### El texto
-
-Casi no hay. Un título mientras la caja está cerrada, **nada en todo el tramo en
-que se abre**, y el botón al final. Las opacidades se calculan con el progreso
-del scroll, no con clases.
-
-| progreso | título | botón |
+| Velo | Peor 5% | |
 |---|---|---|
-| 0 → 0,12 | visible | — |
-| 0,12 → 0,30 | se va | — |
-| 0,30 → 0,64 | — | — |
-| 0,64 → 0,82 | — | aparece |
-| 0,82 → 1 | — | visible |
+| fuerte | 11,3:1 | apaga el aromatizador |
+| **medio** | **7,1:1** | **el que quedó** |
+| suave | 4,6:1 | se cae a AA |
+| muy suave | 2,6:1 | no pasa |
 
-> **Red de seguridad.** El botón arranca en `opacity:0` y lo muestra el lazo. Si
-> `requestAnimationFrame` no corriera (pestaña en segundo plano al cargar,
-> webview raro), a los 1,5 s se muestran título y botón igual. El punto de
-> conversión no puede quedar invisible.
+El "medio" es el más suave que todavía llega a AAA (7:1). Mantiene el color y
+el detalle del aromatizador, que con el fuerte quedaba fantasmal.
 
-### Para cambiar el video
+### Alto del hero
 
-El original y el script que genera la secuencia están en `source/`. La receta
-completa está en [source/README.md](source/README.md).
+`min-height:100svh`, con `100vh` de fallback. El banner anterior era un sticky
+que necesitaba el alto exacto en píxeles y se medía por JS (`--vh`); una foto
+fija no lo necesita, así que esa función se eliminó. `svh` es el viewport con
+la barra de direcciones a la vista, que es justo lo que hace falta para que el
+botón entre sin scrollear.
 
----
+### Para cambiar las fotos
+
+Reemplazar `source/banner/vertical.webp` y `source/banner/horizontal.webp` y
+correr:
+
+    python source/banner-img.py source/banner banner
+
+El script no reencuadra ni retoca: las tomas ya vienen compuestas. Solo genera
+los anchos, y **no agranda por encima del original**. Si las fotos nuevas
+tienen otra proporción, conviene volver a medir las franjas antes de dar por
+buena la posición del texto.
 
 ## Las cajas y el formulario
 
@@ -172,16 +185,46 @@ sobre fondo claro parejo. Las descartadas (`caja mediana 2`, `caja grande 2`)
 quedaron en `source/cajas/`: la mediana 2 muestra cuatro productos y la grande 2
 tiene una dominante cálida que rompe la serie.
 
-`source/cajas-img.py` las procesa. **No recorta**: rellena hasta el cuadrado con
-el color de fondo real de cada foto — que mide como la mediana de las cuatro
-esquinas — así las tres quedan 1:1 sin perder nada de la composición. La foto
-de la mediana viene 881×1000 y es la única que recibe relleno, a los costados.
+#### El reencuadre
+
+Las tres tomas venían con encuadres distintos: márgenes dispares y la caja más
+grande o más chica dentro del cuadro según la toma. Una al lado de la otra se
+notaba poco, pero apiladas en un celular se leían como tres fotos sueltas, con
+la Caja Chica ocupando más cuadro que la Grande.
+
+`source/cajas-img.py` las normaliza. Para cada foto:
+
+1. **Detecta el fondo** como la mediana de las cuatro esquinas.
+2. **Detecta el contenido real** contando píxeles distintos del fondo por fila y
+   por columna, no píxel suelto: así el viñeteado suave de los bordes — que en
+   la mediana llega hasta el borde mismo — no cuenta como contenido.
+3. **Reescala la foto entera** hasta que ese contenido ocupe 88% del alto o 92%
+   del ancho, lo que primero tope.
+4. **La apoya sobre una línea de base común** al 95% del alto, centrada en el
+   contenido y no en el cuadro original.
+5. **Corre el punto blanco** a `rgb(245, 242, 237)`.
+
+El paso 3 reescala la foto completa y la desplaza, en vez de recortar el
+contenido y pegarlo sobre un fondo liso. La primera versión hacía lo segundo y
+en la mediana se veía el borde del recorte como un rectángulo más oscuro, por
+el viñeteado. Al escalar entera, el degradé llega al borde del cuadro como en
+el original y no hay costura. Las tres escalas quedan entre ×1,21 y ×1,46, así
+que el 960 final no inventa detalle sobre originales de 1000 px.
+
+El punto blanco del paso 5 es un ajuste de temperatura, no un filtro: multiplica
+los tres canales por una constante cada uno, así que no altera el color relativo
+de los productos. Baja el blanco puro de las fotos al beige de la página, para
+que la imagen se integre con la tarjeta en vez de aparecer como un rectángulo
+blanco. Para desactivarlo, `PUNTO_BLANCO = None` en el script; si se cambia, hay
+que mover también el `bg` de las tres cajas y el fondo de `.caja__img`, que
+están en ese mismo color para que el relleno no se note.
+
+Las tarjetas pasaron de 4:3 a **1:1** para acompañar a las fotos.
 
     python source/cajas-img.py source/cajas cajas
 
-Las tarjetas pasaron de 4:3 a **1:1** para acompañar a las fotos, y el fondo de
-la tarjeta dejó de ser negro. El cartel de "Caja elegida" pasó a fondo negro
-porque el dorado no se leía sobre el blanco de las fotos.
+El cartel de "Caja elegida" pasó a fondo negro porque el dorado no se leía
+sobre el fondo claro de las fotos.
 
 ### El formulario
 
@@ -241,13 +284,15 @@ El reemplazo es directo: cambiar el `<svg>` por un `<img src="...">` dentro de
 - Todos los objetivos táctiles llegan a 44 px.
 - La barra fija de WhatsApp respeta el notch (`env(safe-area-inset-bottom)`) y
   el body suma padding para no tapar el footer.
-- El alto del viewport se mide por JS (`--vh`) en lugar de usar `svh`/`dvh`:
-  varían entre navegadores y con la barra de direcciones, y acá la caja tiene
-  que entrar sí o sí junto al texto.
-- Las fotos de los combos se piden al CDN en el ancho que corresponde (`srcset`).
+- El hero mide `100svh`: una pantalla exacta, con el título sobre la pared
+  limpia de arriba y el botón sobre el mármol de abajo.
+- La foto del banner en celular es la vertical, 47 KB.
+- Las fotos de las cajas se sirven desde el repo en el ancho que corresponde
+  (`srcset`): en un celular son ~130 KB las tres.
 
-Todo el movimiento se desactiva con `prefers-reduced-motion: reduce`; en ese
-caso la caja se muestra abierta y la sección deja de ser sticky.
+Todo el movimiento se desactiva con `prefers-reduced-motion: reduce`. Desde que
+el banner es una foto fija, lo único que queda por desactivar son las
+transiciones de aparición de las secciones.
 
 ---
 
@@ -268,11 +313,17 @@ caso la caja se muestra abierta y la sección deja de ser sticky.
 - **Contenido comercial asumido, pendiente de validación:** plazos de 7 a 15
   días hábiles, presupuesto en 24 hs. Están en el banner y en el FAQ.
 
+- **Resolución de las fotos del banner.** La vertical es 720×1280 y la
+  horizontal 1280×746. Alcanzan para un celular y para un monitor de 1440,
+  pero en una pantalla 2K la horizontal se estira al doble y se va a ver
+  blanda. Si el cliente tiene los originales en mayor resolución, conviene
+  pedirlos: es cambiar dos archivos y correr el script.
+
 - **Verificar en un teléfono real.** El panel de previsualización usado durante
-  el desarrollo no renderiza en continuo: no corren `requestAnimationFrame` ni
-  `IntersectionObserver`. Se validó el estado final de cada pantalla y la
-  aritmética del scroll forzando el dibujado a mano, pero no la fluidez de la
-  animación. Conviene recorrer la página en un celular una vez publicada.
+  el desarrollo no renderiza en continuo — no corre `IntersectionObserver` y no
+  rasteriza imágenes — así que la verificación fue por medición del DOM y por
+  simulación del recorte y el contraste, no por captura de la página armada.
+  Conviene recorrerla en un celular una vez publicada.
 
 - **Sin analítica.** Si se quiere medir conversión, el punto natural es un
   evento en el click del botón de WhatsApp.

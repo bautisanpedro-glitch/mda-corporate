@@ -8,6 +8,14 @@
 <meta name="theme-color" content="#f0eeeb">
 <meta name="format-detection" content="telephone=no">
 
+<link rel="preload" as="image" media="(max-width:899px)"
+      href="banner/v-720.webp"
+      imagesrcset="banner/v-360.webp 360w, banner/v-540.webp 540w, banner/v-720.webp 720w"
+      imagesizes="100vw">
+<link rel="preload" as="image" media="(min-width:900px)"
+      href="banner/h-1280.webp"
+      imagesrcset="banner/h-640.webp 640w, banner/h-960.webp 960w, banner/h-1280.webp 1280w"
+      imagesizes="58vw">
 <link rel="preconnect" href="https://acdn-us.mitiendanube.com" crossorigin>
 <link rel="dns-prefetch" href="https://acdn-us.mitiendanube.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -89,44 +97,62 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
 .btn svg{width:16px;height:16px;flex:none;}
 
 /* ============================================================
-   HERO — LA CAJA A PANTALLA COMPLETA, ABIERTA POR EL SCROLL
+   HERO — foto fija. Vertical en celular, horizontal en escritorio.
    ============================================================ */
-.stage{position:relative;height:250vh;}
-.stage__sticky{
-  position:sticky;top:0;height:var(--vh,100vh);width:100%;
-  overflow:hidden;background:#e9e3da;
+.hero{
+  position:relative;display:flex;align-items:stretch;
+  min-height:100vh;min-height:100svh;background:#e9e3da;overflow:hidden;
 }
-#cv{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.hero__foto{position:absolute;inset:0;z-index:0;display:block;}
+.hero__foto img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
 
-/* Velo: aclara arriba para el titulo y oscurece abajo para el boton.
-   El centro de la foto queda limpio. */
-.veil{
+/* Velo: aclara arriba y abajo, que es donde va el texto. El centro de la foto
+   queda limpio. Las dos tomas tienen pared clara arriba y marmol claro abajo,
+   asi que el texto va en tinta y el velo solo refuerza el contraste. */
+.hero__velo{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
-    linear-gradient(180deg,rgba(240,238,235,.88) 0%,rgba(240,238,235,.42) 11%,rgba(240,238,235,0) 30%),
-    linear-gradient(0deg,rgba(26,22,18,.60) 0%,rgba(26,22,18,.18) 14%,rgba(26,22,18,0) 32%);
+    linear-gradient(180deg,rgba(240,238,235,.94) 0%,rgba(240,238,235,.58) 13%,rgba(240,238,235,0) 33%),
+    linear-gradient(0deg,rgba(240,238,235,.94) 0%,rgba(240,238,235,.52) 10%,rgba(240,238,235,0) 25%);
 }
 
-.over{
-  position:absolute;inset:0;z-index:2;
+.hero__txt{
+  position:relative;z-index:2;flex:1;min-width:0;
   display:flex;flex-direction:column;justify-content:space-between;align-items:center;
-  text-align:center;pointer-events:none;
-  padding:calc(68px + env(safe-area-inset-top,0px)) 22px calc(28px + env(safe-area-inset-bottom,0px));
+  text-align:center;
+  padding:calc(78px + env(safe-area-inset-top,0px)) 22px calc(30px + env(safe-area-inset-bottom,0px));
 }
-.over > *{pointer-events:auto;width:100%;}
-.beat{will-change:opacity,transform;}
-.beat h1{margin:10px 0 0;font-size:clamp(2.4rem,11vw,4.4rem);}
-.beat h1 em{font-style:italic;font-weight:300;display:block;}
-.beat--fin .btn{width:100%;max-width:330px;padding:21px 28px;font-size:11px;}
+.hero h1{margin:10px 0 0;font-size:clamp(2.4rem,11vw,4.4rem);}
+.hero h1 em{font-style:italic;font-weight:300;display:block;}
+.hero__cta{width:100%;}
+.hero__cta .btn{width:100%;max-width:330px;padding:21px 28px;font-size:11px;}
 
-/* Carga de la secuencia */
-.boot{
-  position:absolute;inset:0;z-index:3;display:grid;place-items:center;
-  background:var(--bg);transition:opacity .55s var(--ease);
+/* Escritorio: la foto va a sangre completa. Es apaisada (1,72) y el viewport
+   tambien, asi que cubrir la pantalla le recorta apenas unas decenas de pixeles
+   — a 1440x860 son 18 px por lado. Un panel lateral, en cambio, la obligaba a
+   un recorte vertical de 0,96 que le cortaba el aromatizador y el difusor.
+   El texto se corre a la izquierda, sobre el velo, que ahi pasa a ser
+   horizontal: la franja limpia de esta toma es la columna izquierda. */
+@media(min-width:900px){
+  /* La intensidad del velo no se eligio a ojo: es la mas suave que todavia
+     deja el texto arriba de 7:1 (AAA) sobre el peor 5% de los pixeles que
+     tiene detras. Mas suave cae a 4,6:1 y mas fuerte apaga el aromatizador. */
+  .hero__velo{
+    background:linear-gradient(90deg,
+      rgba(240,238,235,.90) 0%,
+      rgba(240,238,235,.76) 24%,
+      rgba(240,238,235,.38) 40%,
+      rgba(240,238,235,0) 55%);
+  }
+  .hero__txt{
+    flex:none;width:min(40%,540px);
+    justify-content:center;align-items:flex-start;text-align:left;
+    padding:clamp(96px,12vh,150px) clamp(38px,4vw,72px) clamp(48px,8vh,80px);
+  }
+  .hero h1{font-size:clamp(2.3rem,3.6vw,3.4rem);}
+  .hero__cta{width:auto;margin-top:clamp(28px,4vh,44px);}
+  .hero__cta .btn{width:auto;max-width:none;}
 }
-.boot.is-off{opacity:0;pointer-events:none;}
-.boot__bar{width:120px;height:1px;background:var(--line);overflow:hidden;}
-.boot__bar i{display:block;height:100%;background:var(--ink);width:0;transition:width .25s linear;}
 
 /* ============================================================
    SECCIONES
@@ -158,7 +184,7 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
 .caja:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
 .caja:active{transform:scale(.993);}
 .caja.is-on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);}
-.caja__img{position:relative;display:block;aspect-ratio:1/1;background:#fff;overflow:hidden;}
+.caja__img{position:relative;display:block;aspect-ratio:1/1;background:#f5f2ed;overflow:hidden;}
 .caja__img img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s var(--ease),transform 1s var(--ease);}
 .caja__img img.is-loaded{opacity:1;}
 .caja:hover .caja__img img{transform:scale(1.04);}
@@ -345,7 +371,6 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
   .site-head__in{padding:12px 20px;}
   .logo img{height:31px;}
   .site-head .btn{padding:12px 15px;font-size:9px;letter-spacing:.15em;white-space:nowrap;min-height:44px;}
-  .stage{height:230vh;}
   .sec{padding:64px 0;}
   .ask{gap:34px;}
   .opt{min-height:0;padding:17px 16px;}
@@ -362,9 +387,6 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
   html.js .reveal>*,html.js .reveal-self{opacity:1 !important;transform:none !important;}
-  /* Sin animacion: una sola pantalla, la caja ya abierta y el boton a la vista. */
-  .stage{height:var(--vh,100vh) !important;}
-  .beat{opacity:1 !important;transform:none !important;}
 }
 </style>
 </head>
@@ -384,22 +406,27 @@ html.js .reveal-self.is-in{opacity:1;transform:none;}
   </div>
 </header>
 
-<section class="stage" id="stage">
-  <div class="stage__sticky">
-    <canvas id="cv" aria-label="Caja de regalo Marchand D'Arômes abriéndose"></canvas>
-    <div class="veil" aria-hidden="true"></div>
+<section class="hero" id="hero">
+  <picture class="hero__foto">
+    <source media="(min-width:900px)"
+            srcset="banner/h-640.webp 640w, banner/h-960.webp 960w, banner/h-1280.webp 1280w"
+            sizes="58vw">
+    <img src="banner/v-540.webp"
+         srcset="banner/v-360.webp 360w, banner/v-540.webp 540w, banner/v-720.webp 720w"
+         sizes="100vw"
+         alt="Home spray, vela y difusor Marchand D'Arômes en Bergamota &amp; Orquídea"
+         fetchpriority="high" decoding="async">
+  </picture>
+  <div class="hero__velo" aria-hidden="true"></div>
 
-    <div class="over">
-      <div class="beat beat--ini" id="beatIni">
-        <p class="eyebrow">Regalos corporativos</p>
-        <h1>Algo que se abre<em>y se recuerda</em></h1>
-      </div>
-      <div class="beat beat--fin" id="beatFin" style="opacity:0">
-        <a class="btn btn--gold" href="#elegir">Armá el tuyo</a>
-      </div>
+  <div class="hero__txt">
+    <div class="hero__ini">
+      <p class="eyebrow">Regalos corporativos</p>
+      <h1>Algo que se abre<em>y se recuerda</em></h1>
     </div>
-
-    <div class="boot" id="boot"><div class="boot__bar"><i id="bootBar"></i></div></div>
+    <div class="hero__cta">
+      <a class="btn btn--gold" href="#elegir">Armá el tuyo</a>
+    </div>
   </div>
 </section>
 
@@ -631,189 +658,10 @@ const CONFIG = { WHATSAPP: "5491168657847", MARCA: "Marchand D'Arômes" };
 const $  = (s,c=document)=>c.querySelector(s);
 /* Alto real del viewport. En mobile cambia cuando se oculta la barra de
    direcciones, asi que lo recalculamos en cada resize. */
-function medirAlto(){
-  document.documentElement.style.setProperty("--vh", window.innerHeight + "px");
-}
-medirAlto();
-addEventListener("resize", medirAlto, { passive:true });
-addEventListener("orientationchange", medirAlto);
 const $$ = (s,c=document)=>[...c.querySelectorAll(s)];
 
 /* ============================================================================
-   1. LA CAJA — animación dirigida por scroll
-   ========================================================================== */
-const FRAMES = 64;
-const RUTA = i => "box/b" + String(i).padStart(2,"0") + ".webp";
-
-(function caja(){
-  const stage = $("#stage"), cv = $("#cv"), head = $("#head");
-  const boot = $("#boot"), bootBar = $("#bootBar");
-  const beatIni = $("#beatIni"), beatFin = $("#beatFin");
-  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if(!cv || !cv.getContext) { boot.classList.add("is-off"); return; }
-  const ctx = cv.getContext("2d", { alpha:false });
-
-  const cuadros = new Array(FRAMES);     // ImageBitmap (o Image como respaldo)
-  let listas = 0;
-
-  /* ---------- tamanio real del canvas ---------- */
-  let cw = 0, chh = 0;
-  function medir(){
-    const dpr = Math.min(devicePixelRatio || 1, 2);   // mas de 2x no se nota y cuesta
-    const w = Math.round(innerWidth * dpr);
-    const h = Math.round(innerHeight * dpr);
-    /* En mobile la barra de direcciones cambia innerHeight todo el tiempo:
-       solo redimensionamos si el cambio es grande, si no el canvas parpadea. */
-    if(w === cw && Math.abs(h - chh) < 120) return false;
-    cv.width = cw = w; cv.height = chh = h;
-    return true;
-  }
-
-  /* ---------- dibujo tipo object-fit:cover ---------- */
-  function cubrir(im, alpha){
-    const s = Math.max(cv.width / im.width, cv.height / im.height);
-    const w = im.width * s, h = im.height * s;
-    if(alpha !== 1) ctx.globalAlpha = alpha;
-    ctx.drawImage(im, (cv.width - w) / 2, (cv.height - h) / 2, w, h);
-    if(alpha !== 1) ctx.globalAlpha = 1;
-  }
-
-  function cercano(i){
-    for(let d = 0; d < FRAMES; d++){
-      if(cuadros[i - d]) return cuadros[i - d];
-      if(cuadros[i + d]) return cuadros[i + d];
-    }
-    return null;
-  }
-
-  /* pos viene con decimales: mezclamos los dos frames vecinos y el salto
-     entre imagenes deja de notarse. */
-  function pintar(pos){
-    const a = Math.max(0, Math.min(FRAMES - 1, Math.floor(pos)));
-    const t = pos - a;
-    const ia = cuadros[a] || cercano(a);
-    if(!ia) return;
-    cubrir(ia, 1);
-    if(t > 0.02 && a + 1 < FRAMES && cuadros[a + 1]) cubrir(cuadros[a + 1], t);
-  }
-
-  function progreso(){
-    const r = stage.getBoundingClientRect();
-    const rec = stage.offsetHeight - innerHeight;
-    if(rec <= 0) return 0;
-    return Math.min(1, Math.max(0, -r.top / rec));
-  }
-
-  const rampa = (p, a, b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
-
-  /* ---------- lazo ---------- */
-  let actual = 0, corriendo = true, forzar = true, lazoVivo = false;
-  function lazo(){
-    lazoVivo = true;
-    if(corriendo) requestAnimationFrame(lazo);
-    render();
-  }
-
-  function render(){
-    const objetivo = progreso();
-    /* Amortiguacion: el scroll de los celulares llega a tirones y esto lo
-       convierte en un movimiento continuo. */
-    actual += (objetivo - actual) * 0.2;
-    if(Math.abs(objetivo - actual) < 0.0005) actual = objetivo;
-
-    medir();
-    pintar(actual * (FRAMES - 1));
-    forzar = false;
-
-    const o1 = 1 - rampa(actual, .12, .30);
-    const o2 = rampa(actual, .64, .82);
-    beatIni.style.opacity = o1;
-    beatIni.style.transform = "translate3d(0," + ((1 - o1) * -14).toFixed(1) + "px,0)";
-    beatFin.style.opacity = o2;
-    beatFin.style.transform = "translate3d(0," + ((1 - o2) * 18).toFixed(1) + "px,0)";
-    head.classList.toggle("is-solid", actual > .97);
-  }
-
-  /* ---------- carga ---------- */
-  function viaImg(src){
-    return new Promise((ok, no) => {
-      const im = new Image(); im.onload = () => ok(im); im.onerror = no; im.src = src;
-    });
-  }
-  async function cargar(i){
-    if(cuadros[i]) return;
-    try{
-      const r = await fetch(RUTA(i));
-      const b = await r.blob();
-      /* ImageBitmap se dibuja ya decodificado: es lo que evita los tirones. */
-      cuadros[i] = ("createImageBitmap" in window) ? await createImageBitmap(b)
-                                                   : await viaImg(URL.createObjectURL(b));
-    }catch(e){
-      try{ cuadros[i] = await viaImg(RUTA(i)); }catch(_){}
-    }
-    listas++;
-    bootBar.style.width = Math.round(listas / FRAMES * 100) + "%";
-  }
-
-  /* Orden por subdivision: primero extremos y medios, para que desde temprano
-     haya una version aproximada de toda la animacion. */
-  function orden(n){
-    const out = [], visto = new Set();
-    const push = k => { if(k >= 0 && k < n && !visto.has(k)){ visto.add(k); out.push(k); } };
-    push(0); push(n - 1);
-    for(let paso = n >> 1; paso >= 1; paso >>= 1)
-      for(let i = paso; i < n; i += paso) push(i);
-    for(let i = 0; i < n; i++) push(i);
-    return out;
-  }
-
-  (async function arrancar(){
-    await cargar(0);
-    medir(); pintar(0);
-    boot.classList.add("is-off");
-
-    if(quieto){
-      await cargar(FRAMES - 1);
-      medir(); pintar(FRAMES - 1);
-      beatIni.style.opacity = 1; beatFin.style.opacity = 1;
-      head.classList.add("is-solid");
-      return;                                  // sin lazo ni scroll scrubbing
-    }
-    requestAnimationFrame(lazo);
-    setTimeout(() => {
-      if(lazoVivo) return;
-      beatIni.style.opacity = 1;
-      beatFin.style.opacity = 1;
-      beatFin.style.transform = "none";
-    }, 1500);
-
-    const lista = orden(FRAMES).filter(i => i !== 0);
-    const A_LA_VEZ = 6;
-    for(let i = 0; i < lista.length; i += A_LA_VEZ){
-      await Promise.all(lista.slice(i, i + A_LA_VEZ).map(cargar));
-      forzar = true;
-    }
-  })();
-
-  /* Pausa el lazo cuando el hero no esta en pantalla: no gastar bateria. */
-  if("IntersectionObserver" in window){
-    new IntersectionObserver(es => {
-      const visible = es[0].isIntersecting;
-      if(visible && !corriendo){ corriendo = true; forzar = true; requestAnimationFrame(lazo); }
-      else if(!visible) corriendo = false;
-    }, { threshold:0 }).observe(stage);
-  }
-
-  addEventListener("pageshow", () => { forzar = true; });
-
-  /* Punto de entrada para pruebas (no se usa en produccion). */
-  window.__hero = { pintar, progreso, cuadros, medir, render,
-                    get vivo(){ return lazoVivo; },
-                    ir(p){ actual = p; forzar = true; pintar(p * (FRAMES - 1)); } };
-})();
-
-/* ============================================================================
-   2. LAS CAJAS — tres tamaños, con contenido fijo.
+   1. LAS CAJAS — tres tamaños, con contenido fijo.
       La tarjeta es el selector: tocarla equivale a responder la pregunta 2.
    ========================================================================== */
 /* Fotos propias, servidas desde el repo en cuatro anchos (ver cajas/).
@@ -827,23 +675,23 @@ const CAJAS = [
   { id:"chica", nom:"Caja Chica", n:"2 productos",
     desc:"Un detalle que dice mucho. Ideal para fin de año, bienvenidas o clientes.",
     incluye:["Vela Aromática", "Crema de Manos"],
-    img:"cajas/chica", bg:"#fafafc" },
+    img:"cajas/chica", bg:"#f5f2ed" },
 
   { id:"mediana", nom:"Caja Mediana", n:"3 productos",
     desc:"Cuidado personal y aroma para la casa, en equilibrio justo.",
     incluye:["Crema de Cuerpo", "Jabón Líquido para Manos", "Perfume de Ambientes"],
-    img:"cajas/mediana", bg:"#ffffff" },
+    img:"cajas/mediana", bg:"#f5f2ed" },
 
   { id:"grande", nom:"Caja Grande", n:"4 productos",
     desc:"La experiencia Marchand completa.",
     incluye:["Crema de Cuerpo", "Vela Aromática", "Perfume de Ambientes", "Difusor de Varillas"],
-    img:"cajas/grande", bg:"#ffffff" }
+    img:"cajas/grande", bg:"#f5f2ed" }
 ];
 
 const PERSONAS = { p1:"10 a 29 personas", p2:"30 a 49 personas", p3:"50 o más personas" };
 
 /* ============================================================================
-   3. EL FORMULARIO — dos preguntas: cuántas personas y qué caja
+   2. EL FORMULARIO — dos preguntas: cuántas personas y qué caja
    ========================================================================== */
 const estado = { personas:null, caja:null };
 
@@ -929,7 +777,7 @@ function revisar(){
 }
 
 /* ============================================================================
-   4. EL MENSAJE DE WHATSAPP
+   3. EL MENSAJE DE WHATSAPP
    ========================================================================== */
 function mensaje(){
   const c = cajaElegida();
@@ -971,7 +819,7 @@ function cerrar(mostrar){
 }
 
 /* ============================================================================
-   5. DETALLES
+   4. DETALLES
    ========================================================================== */
 $("#yr").textContent = new Date().getFullYear();
 $("#footWa").href = "https://wa.me/" + CONFIG.WHATSAPP;
