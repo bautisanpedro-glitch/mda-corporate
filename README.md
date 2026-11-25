@@ -36,6 +36,8 @@ Dominio propio en **Settings → Domains**, agregando el `CNAME` que indica Verc
     ├── index.html        # la página entera: HTML + CSS + JS
     ├── banner/           # las dos fotos del hero, 3 anchos c/u (206 KB)
     ├── cajas/            # fotos de los tres tamaños, 4 anchos c/u (490 KB)
+    ├── videos/           # los dos clips y sus posters
+    ├── bcorp.webp        # sello oficial B Corp (6 KB)
     ├── vercel.json       # cleanUrls y headers de seguridad
     ├── .vercelignore     # qué va al repo pero no al deploy
     ├── .gitignore
@@ -47,6 +49,8 @@ Dominio propio en **Settings → Domains**, agregando el `CNAME` que indica Verc
         ├── banner-img.py     # regenera banner/
         ├── cajas/            # fotos originales del cliente (JPG/PNG)
         ├── cajas-img.py      # regenera cajas/ desde esos originales
+        ├── videos/           # posters en JPG, sacados de los clips
+        ├── bcorp-oficial.png # el PNG oficial, con transparencia
         ├── caja.mov          # video del banner viejo (9,4 MB, HEVC)
         ├── encode-frames.py  # regeneraba los frames de ese banner
         └── README.md         # cómo se hacía
@@ -54,7 +58,8 @@ Dominio propio en **Settings → Domains**, agregando el `CNAME` que indica Verc
 La carpeta `box/`, con los 64 frames del banner animado, **ya no se usa**.
 Queda excluida del deploy por `.vercelignore` y se puede borrar del repo.
 
-**Lo que se publica son ~750 KB.** Una visita real baja mucho menos: tanto de
+**Lo que se publica son ~10 MB**, de los cuales 9,2 MB son los dos clips — que
+nadie baja hasta que toca play. Sin ellos, la página pesa ~1 MB. Una visita real baja mucho menos: tanto de
 `banner/` como de `cajas/` el navegador elige un solo ancho por foto. En un
 celular son ~47 KB del banner y ~130 KB de las tres cajas. El material sin
 procesar y el catálogo de referencia están en el repositorio pero excluidos del
@@ -146,6 +151,90 @@ El script no reencuadra ni retoca: las tomas ya vienen compuestas. Solo genera
 los anchos, y **no agranda por encima del original**. Si las fotos nuevas
 tienen otra proporción, conviene volver a medir las franjas antes de dar por
 buena la posición del texto.
+
+## Los clips: "Así llegan"
+
+Dos videos verticales dentro de la sección "Cómo funciona": el primero muestra
+la caja corporativa abriéndose, el segundo el envoltorio de regalo. Van ahí, y
+no en una sección propia, para no alargar la página con un bloque más.
+
+### Cómo no entorpecen
+
+El pedido era que no interrumpieran nada. Se resolvió con una **fachada**:
+
+- **La página no carga ningún video.** Carga dos fotos de 24 y 33 KB. Verificado
+  en el navegador: al abrir la página hay **cero** elementos `<video>` en el
+  documento.
+- **El video se baja recién cuando alguien toca play**, y se reproduce **en el
+  lugar**: nada de modal ni de pantalla completa que tape el resto.
+- **No hay autoplay ni sonido** de arranque.
+- **No mueve nada.** La tarjeta tiene `aspect-ratio:9/16`, así que su alto está
+  reservado desde el principio. Medido antes y después de darle play: 285 px en
+  los dos casos.
+- **Si el archivo falta, vuelve la foto.** Un `error` en el `<video>` lo quita y
+  repone el póster y el botón, así que la sección nunca queda en negro.
+
+### Los pósters
+
+Son fotogramas de los propios videos, en `videos/`, a 360 y 540 px de ancho.
+Se sacaron decodificando los MOV en el navegador y mandando el cuadro elegido a
+un receptor local, porque en este entorno no hay ffmpeg (ver abajo).
+
+### Cómo se convirtieron
+
+Los archivos que mandó el cliente **no servían para web**:
+
+| | Original | Publicado |
+|---|---|---|
+| Codec | HEVC / H.265 (`hvc1`) | **H.264 (`avc1`) + AAC** |
+| Tamaño | 2160×3840 y 2158×3746 | 720×1280 y 720×1250 |
+| Peso | 75 MB y 73 MB | **3,8 MB y 5,2 MB** |
+| Duración | 19,9 s y 27,1 s | 20,6 s y 27,8 s |
+
+HEVC no reproduce en Chrome ni en Firefox, y 75 MB es inviable.
+
+En este entorno no hay ffmpeg, y bajar un binario portable quedó bloqueado. La
+salida fue **transcodificar en el navegador**, que sí sabe decodificar HEVC:
+
+1. Un `<video>` con el MOV original se dibuja cada 33 ms sobre un `<canvas>` de
+   720 px de ancho, con el alto que mantiene la proporción exacta del origen
+   (redondeado a par, que es lo que pide H.264).
+2. `canvas.captureStream(30)` da la pista de video ya reescalada.
+3. El audio **se desvía por WebAudio** a un `MediaStreamAudioDestinationNode` y
+   nunca se conecta a `ac.destination`: así entra al archivo a volumen pleno
+   sin que suene en la máquina mientras se graba.
+4. Las dos pistas se juntan en un `MediaStream` y se graban con `MediaRecorder`
+   en `video/mp4;codecs=avc1.4D401F,mp4a.40.2`, a 1,5 Mbps de video y 96 kbps
+   de audio.
+
+Verificado sobre los archivos resultantes:
+
+- Contenedor MP4 con pistas `avc1` y `mp4a`.
+- Audio real, no silencio: estéreo 48 kHz, pico 0,73 y 0,50, RMS 0,11.
+- Duración finita y correcta, y el salto al final funciona.
+- El primer fotograma tiene imagen, no negro.
+- Los dos reproducen desde la página, y la tarjeta mide 286 px antes y después
+  de darle play.
+
+Dos cosas que conviene saber:
+
+- **Es MP4 fragmentado.** Con `preload="metadata"` el navegador informa una
+  duración corta hasta que baja más fragmentos. La fachada crea el `<video>`
+  con `preload="auto"`, así que en la página la duración sale bien desde el
+  arranque.
+- **La grabación es en tiempo real**, así que cada clip quedó ~0,7 s más largo
+  que el original: una pizca de congelado al principio y al final. Si molesta,
+  o si se quiere bajar el peso, con ffmpeg a mano el reencode queda más prolijo
+  y más chico:
+
+      ffmpeg -i original.mov -vf "scale=720:-2" -c:v libx264 -profile:v high \
+        -crf 23 -preset slow -pix_fmt yuv420p -c:a aac -b:a 128k \
+        -movflags +faststart videos/llegada-caja.mp4
+
+Los MOV originales **no se copiaron al repositorio**: son 148 MB entre los dos.
+Conviene dejarlos donde están y versionar solo los MP4.
+
+---
 
 ## Las cajas y el formulario
 
@@ -265,19 +354,20 @@ El mensaje queda así:
   escribirnos" — que frenaba — y pasó a "Lo que más nos preguntan", con un
   botón de WhatsApp al pie de la lista para quien no encuentre su respuesta.
 
-### Sello Empresa B
+### Sello B Corp
 
-En el pie, dentro de `.sello`. Es un **SVG dibujado a mano, no el archivo
-oficial de Sistema B**: sirve para ver el bloque en su lugar y con las
-proporciones correctas.
+En el pie, dentro de `.sello`. Es el **archivo oficial** que pasó el cliente:
+un PNG con transparencia donde la tinta negra vive en el canal alfa, convertido
+a WebP sin pérdida (`bcorp.webp`, 5,9 KB, idéntico al original píxel por píxel).
 
-> **Antes de publicar:** reemplazar por el logotipo oficial que entrega Sistema
-> B y verificar que la certificación de la empresa esté vigente. El sello es una
-> marca registrada con condiciones de uso propias, y mostrarlo sin certificación
-> vigente es una afirmación comercial falsa.
+No se recorta ni se le agrega texto al lado: los márgenes que trae el archivo
+son el área de resguardo de la marca, y el logo ya dice "Certified B
+Corporation" por sí mismo.
 
-El reemplazo es directo: cambiar el `<svg>` por un `<img src="...">` dentro de
-`.sello`, que ya tiene el tamaño y la alineación resueltos.
+Las cajas del cliente llevan el sello impreso, así que la certificación está
+confirmada.
+
+---
 
 ## Móvil
 
@@ -287,6 +377,8 @@ El reemplazo es directo: cambiar el `<svg>` por un `<img src="...">` dentro de
 - El hero mide `100svh`: una pantalla exacta, con el título sobre la pared
   limpia de arriba y el botón sobre el mármol de abajo.
 - La foto del banner en celular es la vertical, 47 KB.
+- Los clips no pesan nada hasta que se tocan: la página carga dos pósters de
+  24 y 33 KB, y el video recién al hacer play.
 - Las fotos de las cajas se sirven desde el repo en el ancho que corresponde
   (`srcset`): en un celular son ~130 KB las tres.
 
@@ -302,8 +394,10 @@ transiciones de aparición de las secciones.
   favicon). Las fotos de las cajas pasaron a ser propias y viven en el repo, así
   que una baja de productos en la tienda ya no afecta a esta página.
 
-- **Sello Empresa B:** el SVG del pie es un dibujo propio, no el archivo
-  oficial. Hay que reemplazarlo y confirmar que la certificación esté vigente.
+- **Los clips se reencodearon en el navegador, no con ffmpeg.** Funcionan y
+  están verificados, pero cada uno quedó ~0,7 s más largo que el original y
+  pesan 3,8 y 5,2 MB. Un reencode con ffmpeg a mano los dejaría más cortos y
+  más livianos; el comando está en la sección de los clips.
 
 - **Contenido de las cajas:** la lista sale de leer las fotos del cliente, no de
   una lista que haya pasado por escrito. Vale confirmarla, sobre todo los
