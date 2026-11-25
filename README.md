@@ -35,6 +35,7 @@ Dominio propio en **Settings → Domains**, agregando el `CNAME` que indica Verc
     .
     ├── index.html        # la página entera: HTML + CSS + JS
     ├── box/              # 64 frames WebP de la caja abriéndose (1,2 MB)
+    ├── cajas/            # fotos de los tres tamaños, 4 anchos c/u (430 KB)
     ├── vercel.json       # cleanUrls y headers de seguridad
     ├── .vercelignore     # qué va al repo pero no al deploy
     ├── .gitignore
@@ -44,11 +45,16 @@ Dominio propio en **Settings → Domains**, agregando el `CNAME` que indica Verc
     └── source/           # material fuente, NO se publica
         ├── caja.mov          # video original (9,4 MB, HEVC)
         ├── encode-frames.py  # regenera la secuencia de frames
+        ├── cajas/            # fotos originales del cliente (JPG/PNG)
+        ├── cajas-img.py      # regenera cajas/ desde esos originales
         └── README.md         # cómo rehacerla
 
-**Lo que se publica son ~1,3 MB**, casi todo la secuencia del banner. El video original y el catálogo de referencia
-están en el repositorio pero excluidos del deploy por `.vercelignore`: sirven
-para mantener el proyecto, no para que los baje un visitante.
+**Lo que se publica son ~1,8 MB**, casi todo la secuencia del banner. Una
+visita real baja bastante menos: de `cajas/` el navegador elige un solo ancho
+por foto (~130 KB las tres en un celular). El video original, las fotos sin
+procesar y el catálogo de referencia están en el repositorio pero excluidos del
+deploy por `.vercelignore`: sirven para mantener el proyecto, no para que los
+baje un visitante.
 
 ---
 
@@ -135,14 +141,47 @@ a medida:
 
 | Caja | Productos | Contenido |
 |---|---|---|
-| Chica | 2 | Crema de Manos, Jabón Líquido |
-| Mediana | 3 | Crema de Manos, Jabón Líquido, Vela Aromática |
-| Grande | 4 | Absolu de Parfum, Crema de Cuerpo, Crema de Manos, Difusor de Varillas |
+| Chica | 2 | Vela Aromática, Crema de Manos |
+| Mediana | 3 | Crema de Cuerpo, Jabón Líquido para Manos, Perfume de Ambientes |
+| Grande | 4 | Crema de Cuerpo, Vela Aromática, Perfume de Ambientes, Difusor de Varillas |
+
+Esta lista **se leyó de las fotos que mandó el cliente**, producto por producto,
+para que el texto diga exactamente lo que se ve en la imagen. Reemplaza a la
+lista provisoria anterior, que venía de los ejemplos del borrador y ya no
+coincidía con el material. Igual conviene que el cliente la confirme.
 
 El contenido vive en la constante `CAJAS`, dentro del bloque 2 del script. Cada
-caja tiene un array `incluye` que alimenta a la vez la tarjeta de la sección
-"Las cajas" y la línea *Incluye* del mensaje de WhatsApp: se edita en un solo
-lugar y los dos quedan al día.
+caja tiene un array `incluye` que alimenta tres cosas a la vez: la tarjeta de la
+sección "Las cajas", el texto `alt` de la foto y la línea *Incluye* del mensaje
+de WhatsApp. Se edita en un solo lugar y los tres quedan al día.
+
+### Las fotos
+
+En `cajas/`, una por tamaño, en cuatro anchos (320 / 480 / 720 / 960) para que
+el navegador baje solo el que necesita:
+
+| Caja | Original |
+|---|---|
+| Chica | `Caja chica.jpg` |
+| Mediana | `caja mediana 1.jpg` |
+| Grande | `caja grande 1.jpg` |
+
+De las seis fotos que llegó el cliente se eligieron estas tres por dos razones:
+el conteo de productos coincide con el tamaño que ilustran, y las tres están
+sobre fondo claro parejo. Las descartadas (`caja mediana 2`, `caja grande 2`)
+quedaron en `source/cajas/`: la mediana 2 muestra cuatro productos y la grande 2
+tiene una dominante cálida que rompe la serie.
+
+`source/cajas-img.py` las procesa. **No recorta**: rellena hasta el cuadrado con
+el color de fondo real de cada foto — que mide como la mediana de las cuatro
+esquinas — así las tres quedan 1:1 sin perder nada de la composición. La foto
+de la mediana viene 881×1000 y es la única que recibe relleno, a los costados.
+
+    python source/cajas-img.py source/cajas cajas
+
+Las tarjetas pasaron de 4:3 a **1:1** para acompañar a las fotos, y el fondo de
+la tarjeta dejó de ser negro. El cartel de "Caja elegida" pasó a fondo negro
+porque el dorado no se leía sobre el blanco de las fotos.
 
 ### El formulario
 
@@ -214,16 +253,17 @@ caso la caja se muestra abierta y la sección deja de ser sticky.
 
 ## Puntos abiertos
 
-- **Las fotos de producto se sirven desde el CDN de Tiendanube.** Se mantienen
-  en sincronía con la tienda, pero si se migra de plataforma o se dan de baja
-  productos, esas URLs dejan de responder. Los frames de la caja, en cambio,
-  viven en el repo. Decisión tomada a conciencia.
+- **Del CDN de Tiendanube ya solo cuelga el logotipo** (cabecera, pie y
+  favicon). Las fotos de las cajas pasaron a ser propias y viven en el repo, así
+  que una baja de productos en la tienda ya no afecta a esta página.
 
 - **Sello Empresa B:** el SVG del pie es un dibujo propio, no el archivo
   oficial. Hay que reemplazarlo y confirmar que la certificación esté vigente.
 
-- **Contenido de las cajas:** los productos de cada tamaño son los que venían
-  como ejemplo. Falta la lista definitiva del cliente.
+- **Contenido de las cajas:** la lista sale de leer las fotos del cliente, no de
+  una lista que haya pasado por escrito. Vale confirmarla, sobre todo los
+  nombres comerciales exactos ("Perfume de Ambientes" figura en el envase como
+  *Parfums pour la Maison*).
 
 - **Contenido comercial asumido, pendiente de validación:** plazos de 7 a 15
   días hábiles, presupuesto en 24 hs. Están en el banner y en el FAQ.

@@ -158,13 +158,13 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem);}
 .caja:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
 .caja:active{transform:scale(.993);}
 .caja.is-on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink);}
-.caja__img{position:relative;display:block;aspect-ratio:4/3;background:#000;overflow:hidden;}
+.caja__img{position:relative;display:block;aspect-ratio:1/1;background:#fff;overflow:hidden;}
 .caja__img img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s var(--ease),transform 1s var(--ease);}
 .caja__img img.is-loaded{opacity:1;}
 .caja:hover .caja__img img{transform:scale(1.04);}
 .caja__tag{
-  position:absolute;left:0;top:0;background:var(--gold);color:var(--ink);
-  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;padding:7px 13px;
+  position:absolute;left:0;top:0;background:var(--ink);color:var(--bg);
+  font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;padding:8px 14px;
   opacity:0;transition:opacity .35s var(--ease);
 }
 .caja.is-on .caja__tag{opacity:1;}
@@ -816,27 +816,28 @@ const RUTA = i => "box/b" + String(i).padStart(2,"0") + ".webp";
    2. LAS CAJAS — tres tamaños, con contenido fijo.
       La tarjeta es el selector: tocarla equivale a responder la pregunta 2.
    ========================================================================== */
-const IMG = "https://acdn-us.mitiendanube.com/stores/001/356/042/products/";
-function srcsetDe(a){
-  const base = a.replace(/-640-0\.webp$/, "");
-  return [240,320,480,640].map(w => IMG + base + "-" + w + "-0.webp " + w + "w").join(", ");
+/* Fotos propias, servidas desde el repo en cuatro anchos (ver cajas/).
+   Se generan con source/cajas-img.py a partir de los originales. */
+const ANCHOS_CAJA = [320, 480, 720, 960];
+function srcsetDe(base){
+  return ANCHOS_CAJA.map(w => base + "-" + w + ".webp " + w + "w").join(", ");
 }
 
 const CAJAS = [
   { id:"chica", nom:"Caja Chica", n:"2 productos",
     desc:"Un detalle que dice mucho. Ideal para fin de año, bienvenidas o clientes.",
-    incluye:["Crema de Manos", "Jabón Líquido"],
-    img:"caja-cremas-4b33944efe2c056d2c17660693621667-640-0.webp", bg:"#000" },
+    incluye:["Vela Aromática", "Crema de Manos"],
+    img:"cajas/chica", bg:"#fafafc" },
 
   { id:"mediana", nom:"Caja Mediana", n:"3 productos",
     desc:"Cuidado personal y aroma para la casa, en equilibrio justo.",
-    incluye:["Crema de Manos", "Jabón Líquido", "Vela Aromática"],
-    img:"campana-bolsa-y-vela-26b994caec223d18bc17561226418165-640-0.webp", bg:"#000" },
+    incluye:["Crema de Cuerpo", "Jabón Líquido para Manos", "Perfume de Ambientes"],
+    img:"cajas/mediana", bg:"#ffffff" },
 
   { id:"grande", nom:"Caja Grande", n:"4 productos",
     desc:"La experiencia Marchand completa.",
-    incluye:["Absolu de Parfum", "Crema de Cuerpo", "Crema de Manos", "Difusor de Varillas"],
-    img:"absolu-le-marais-estuche-abierto-25_f-ceed7eb0f2b7d10a6d17599490935596-640-0.webp", bg:"#e5ddd2" }
+    incluye:["Crema de Cuerpo", "Vela Aromática", "Perfume de Ambientes", "Difusor de Varillas"],
+    img:"cajas/grande", bg:"#ffffff" }
 ];
 
 const PERSONAS = { p1:"10 a 29 personas", p2:"30 a 49 personas", p3:"50 o más personas" };
@@ -851,9 +852,9 @@ function pintarCajas(){
   cont.innerHTML = CAJAS.map(c => `
     <button type="button" class="caja" data-id="${c.id}" aria-pressed="false">
       <span class="caja__img" style="background:${c.bg}">
-        <img src="${IMG}${c.img}" srcset="${srcsetDe(c.img)}"
-             sizes="(max-width:799px) calc(100vw - 42px), 33vw"
-             alt="${c.nom}" loading="lazy" decoding="async">
+        <img src="${c.img}-480.webp" srcset="${srcsetDe(c.img)}"
+             sizes="(max-width:799px) calc(100vw - 42px), (max-width:1300px) 32vw, 400px"
+             alt="${c.nom}: ${c.incluye.join(", ")}" loading="lazy" decoding="async">
         <span class="caja__tag">Caja elegida</span>
       </span>
       <span class="caja__body">
